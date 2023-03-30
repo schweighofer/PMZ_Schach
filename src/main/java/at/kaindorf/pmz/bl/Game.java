@@ -2,12 +2,12 @@ package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.pojos.chess.FieldState;
 import at.kaindorf.pmz.pojos.chess.Piece;
-import at.kaindorf.pmz.pojos.chess.pieces.Bishop;
-import at.kaindorf.pmz.pojos.chess.pieces.King;
-import at.kaindorf.pmz.pojos.chess.pieces.Knight;
-import at.kaindorf.pmz.pojos.chess.pieces.Pawn;
-import at.kaindorf.pmz.pojos.chess.pieces.Queen;
-import at.kaindorf.pmz.pojos.chess.pieces.Rook;
+import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Bishop;
+import at.kaindorf.pmz.pojos.chess.pieces.onestepper.King;
+import at.kaindorf.pmz.pojos.chess.pieces.onestepper.Knight;
+import at.kaindorf.pmz.pojos.chess.pieces.onestepper.Pawn;
+import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Queen;
+import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,7 @@ public class Game {
             board.add(null);
         }
 
-        board.set(PMZController.TEST_POS1, new Bishop(true, this));
+        board.set(PMZController.TEST_POS1, new Pawn(true, this));
         board.set(PMZController.TEST_POS2, new Rook(false, this));
     }
 

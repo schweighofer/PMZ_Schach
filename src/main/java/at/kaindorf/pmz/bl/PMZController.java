@@ -8,8 +8,8 @@ package at.kaindorf.pmz.bl;
 
 public class PMZController {
 
-    public static int TEST_POS1 = 38;
-    public static int TEST_POS2 = 63;
+    public static int TEST_POS1 = 54;
+    public static int TEST_POS2 = 47;
 
     public static void main(String[] args) {
         Game game = new Game();
@@ -17,6 +17,8 @@ public class PMZController {
         // bis jetzt fertig:
         // - Rook
         // - Bishop
-        game.getPiece(TEST_POS1).getPossibleMoves();
+        // - Queen
+        // - Pawn
+        System.out.println(game.getPiece(TEST_POS1).getPossibleMoves());
     }
 }

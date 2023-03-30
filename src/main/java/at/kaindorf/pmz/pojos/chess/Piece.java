@@ -2,7 +2,9 @@ package at.kaindorf.pmz.pojos.chess;
 
 import at.kaindorf.pmz.bl.Game;
 
+import java.beans.Expression;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @Author Marcus Schweighofer

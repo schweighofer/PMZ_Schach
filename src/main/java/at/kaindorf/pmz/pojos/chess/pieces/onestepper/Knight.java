@@ -1,4 +1,4 @@
-package at.kaindorf.pmz.pojos.chess.pieces;
+package at.kaindorf.pmz.pojos.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.Piece;

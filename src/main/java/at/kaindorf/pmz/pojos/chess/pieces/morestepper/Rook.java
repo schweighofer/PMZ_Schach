@@ -1,4 +1,4 @@
-package at.kaindorf.pmz.pojos.chess.pieces;
+package at.kaindorf.pmz.pojos.chess.pieces.morestepper;
 
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.FieldState;
@@ -12,11 +12,11 @@ import static at.kaindorf.pmz.bl.Game.*;
 /**
  * @Author Marcus Schweighofer
  * Created on 29.03.2023.
- * Class: Bishop.java
+ * Class: Rook.java
  */
 
-public class Bishop extends Piece {
-    public Bishop(Boolean isBlack, Game game) {
+public class Rook extends Piece {
+    public Rook(Boolean isBlack, Game game) {
         super(isBlack, game);
     }
 
@@ -26,49 +26,49 @@ public class Bishop extends Piece {
         final int position = game.getPosition(this);
         // 4 while loops, one for every direction
 
-        // left-up
-        int assumedPosition = position - LINE_SIZE - 1;
-        while (((assumedPosition + LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition >= 0)) {
+        // left
+        int assumedPosition = position - 1;
+        while (assumedPosition > (int)(position * DIVISOR_LINE_SIZE) * LINE_SIZE) {
             FieldState fieldState = game.getFieldState(assumedPosition);
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
-                assumedPosition -= (LINE_SIZE + 1);
+                assumedPosition--;
             } else {
                 super.pieceAhead(possibleMoves, assumedPosition, fieldState);
                 break;
             }
         }
-        // right-up
-        assumedPosition = position - LINE_SIZE + 1;
-        while (((assumedPosition + LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition >= 0)) {
+        // right
+        assumedPosition = position + 1;
+        while (assumedPosition < (int)(position * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE) {
             FieldState fieldState = game.getFieldState(assumedPosition);
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
-                assumedPosition -= (LINE_SIZE - 1);
+                assumedPosition++;
             } else {
                 super.pieceAhead(possibleMoves, assumedPosition, fieldState);
                 break;
             }
         }
-        // left-down
-        assumedPosition = position + LINE_SIZE - 1;
-        while (((assumedPosition - LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition < FIELD_SIZE)) {
+        // up
+        assumedPosition = position - LINE_SIZE;
+        while ((int)((assumedPosition + LINE_SIZE) * DIVISOR_LINE_SIZE) > 0) {
             FieldState fieldState = game.getFieldState(assumedPosition);
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
-                assumedPosition += (LINE_SIZE - 1);
+                assumedPosition -= LINE_SIZE;
             } else {
                 super.pieceAhead(possibleMoves, assumedPosition, fieldState);
                 break;
             }
         }
-        // right-down
-        assumedPosition = position + LINE_SIZE + 1;
-        while (((assumedPosition - LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition < FIELD_SIZE)) {
+        // down
+        assumedPosition = position + LINE_SIZE;
+        while ((int)((assumedPosition) * DIVISOR_LINE_SIZE) * LINE_SIZE < FIELD_SIZE) {
             FieldState fieldState = game.getFieldState(assumedPosition);
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
-                assumedPosition += (LINE_SIZE + 1);
+                assumedPosition += LINE_SIZE;
             } else {
                 super.pieceAhead(possibleMoves, assumedPosition, fieldState);
                 break;
