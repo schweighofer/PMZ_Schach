@@ -11,8 +11,8 @@ import static at.kaindorf.pmz.bl.Game.*;
 
 /**
  * @Author Marcus Schweighofer
- * Created on 24.03.2023.
- * Class: Runner.java
+ * Created on 29.03.2023.
+ * Class: Bishop.java
  */
 
 public class Bishop extends Piece {
