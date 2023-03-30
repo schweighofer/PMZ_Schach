@@ -1,6 +1,7 @@
 package at.kaindorf.pmz.pojos.chess;
 
 import at.kaindorf.pmz.bl.Game;
+import at.kaindorf.pmz.pojos.chess.pieces.MoveType;
 
 import java.beans.Expression;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class Piece {
     public abstract List<Integer> getPossibleMoves();
 
     // handles enemy pieces and only returns true if the piece is the enemy king
-    protected boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
+    public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
         if ((fieldState == FieldState.BLACK) != isBlack) {
             possibleMoves.add(currentPosition);
             return false;
@@ -32,12 +33,18 @@ public abstract class Piece {
         return ((fieldState == FieldState.BLACK_KING) == isBlack);
     }
 
+    protected abstract List<Integer> step(int position, MoveType... types);
+
     public Integer getPosition() {
         return game.getPosition(this);
     }
 
     public Boolean isBlack() {
         return isBlack;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     @Override

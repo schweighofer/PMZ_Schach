@@ -2,6 +2,7 @@ package at.kaindorf.pmz.pojos.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.Piece;
+import at.kaindorf.pmz.pojos.chess.pieces.OneStepPiece;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Class: King.java
  */
 
-public class King extends Piece {
+public class King extends OneStepPiece {
     public King(Boolean isBlack, Game game) {
         super(isBlack, game);
     }

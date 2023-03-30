@@ -2,7 +2,9 @@ package at.kaindorf.pmz.pojos.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.Piece;
+import at.kaindorf.pmz.pojos.chess.pieces.OneStepPiece;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,13 +13,18 @@ import java.util.List;
  * Class: Horse.java
  */
 
-public class Knight extends Piece {
+public class Knight extends OneStepPiece {
     public Knight(Boolean isBlack, Game game) {
         super(isBlack, game);
     }
 
     @Override
     public List<Integer> getPossibleMoves() {
-        return null;
+        List<Integer> possibleMoves = new ArrayList<>();
+        final int position = game.getPosition(this);
+
+
+
+        return possibleMoves;
     }
 }

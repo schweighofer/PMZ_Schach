@@ -103,7 +103,7 @@ public class Game {
             board.add(null);
         }
 
-        board.set(PMZController.TEST_POS1, new Pawn(true, this));
+        board.set(PMZController.TEST_POS1, new Rook(true, this));
         board.set(PMZController.TEST_POS2, new Rook(false, this));
     }
 
