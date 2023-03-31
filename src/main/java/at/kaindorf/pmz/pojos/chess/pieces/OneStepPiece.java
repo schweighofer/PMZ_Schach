@@ -81,9 +81,9 @@ public abstract class OneStepPiece extends Piece {
 
     public void knight(List<Integer> possibleMoves, int position) {
         int[] options = {
-                -(2 * LINE_SIZE + 1),
-                -(2 * LINE_SIZE - 1),
-                -(LINE_SIZE - 2),
+                - (2 * LINE_SIZE + 1),
+                - (2 * LINE_SIZE - 1),
+                - (LINE_SIZE - 2),
                 LINE_SIZE + 2,
                 2 * LINE_SIZE + 1,
                 2 * LINE_SIZE - 1,

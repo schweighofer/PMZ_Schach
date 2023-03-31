@@ -1,14 +1,11 @@
 package at.kaindorf.pmz.pojos.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.pojos.chess.FieldState;
-import at.kaindorf.pmz.pojos.chess.Piece;
 import at.kaindorf.pmz.pojos.chess.pieces.OneStepPiece;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.kaindorf.pmz.bl.Game.*;
 import static at.kaindorf.pmz.pojos.chess.pieces.MoveType.PAWN;
 
 /**
