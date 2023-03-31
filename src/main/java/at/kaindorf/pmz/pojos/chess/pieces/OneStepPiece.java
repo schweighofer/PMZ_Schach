@@ -3,6 +3,7 @@ package at.kaindorf.pmz.pojos.chess.pieces;
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.FieldState;
 import at.kaindorf.pmz.pojos.chess.Piece;
+import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,9 +47,10 @@ public abstract class OneStepPiece extends Piece {
         return false;
     }
 
-    public void pawn(List<Integer> possibleMoves, int position) {
+    @Override
+    protected void pawn(List<Integer> possibleMoves, int position) {
         int direction = (isBlack ? -1 : 1);
-        int assumedPosition = position + LINE_SIZE * direction;
+        Integer assumedPosition = position + LINE_SIZE * direction;
         // Move
         if (assumedPosition >= 0 && assumedPosition < FIELD_SIZE) {
             FieldState fieldState = game.getFieldState(assumedPosition);
@@ -79,116 +81,116 @@ public abstract class OneStepPiece extends Piece {
         }
     }
 
-    public void knight(List<Integer> possibleMoves, int position) {
+    @Override
+    protected void knight(List<Integer> possibleMoves, int position) {
         int[] options = {
-                - (2 * LINE_SIZE + 1),
+                // right up
                 - (2 * LINE_SIZE - 1),
                 - (LINE_SIZE - 2),
+                // right down
                 LINE_SIZE + 2,
                 2 * LINE_SIZE + 1,
+                // left down
                 2 * LINE_SIZE - 1,
                 LINE_SIZE - 2,
-                - (LINE_SIZE + 2)
+                // left up
+                - (LINE_SIZE + 2),
+                - (2 * LINE_SIZE + 1)
         };
 
-        for (int i : options) {
-            System.out.println(position + i);
+        // right up
+        for (int i = 0; i < 2; i++) {
+            MutableInteger possibleMove = new MutableInteger(position + options[i]);
+            if ((possibleMove.v() >= 0) && (possibleMove.v() % LINE_SIZE != 0)) {
+                handleMove(possibleMove, 0, possibleMoves);
+            }
         }
-    }
+        // right down
+        for (int i = 2; i < 4; i++) {
+            MutableInteger possibleMove = new MutableInteger(position + options[i]);
+            if ((possibleMove.v() < FIELD_SIZE) && (possibleMove.v() % LINE_SIZE != 0)) {
+                handleMove(possibleMove, 0, possibleMoves);
+            }
+        }
 
-    private void left(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position - 1;
-        if (assumedPosition > (int)(position * DIVISOR_LINE_SIZE) * LINE_SIZE) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
+        // left down
+        for (int i = 4; i < 6; i++) {
+            MutableInteger possibleMove = new MutableInteger(position + options[i]);
+            if ((possibleMove.v() < FIELD_SIZE) && (possibleMove.v() % LINE_SIZE != 7)) {
+                handleMove(possibleMove, 0, possibleMoves);
+            }
+        }
+
+        // right up
+        for (int i = 6; i < 8; i++) {
+            MutableInteger possibleMove = new MutableInteger(position + options[i]);
+            if ((possibleMove.v() >= 0) && (possibleMove.v() % LINE_SIZE != 7)) {
+                handleMove(possibleMove, 0, possibleMoves);
             }
         }
     }
 
-    private void right(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position + 1;
-        if (assumedPosition < (int)(position * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void left(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position - 1);
+        if (assumedPosition.v() >= (int)(position * DIVISOR_LINE_SIZE) * LINE_SIZE) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 
-    private void up(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position - LINE_SIZE;
-        if ((int)((assumedPosition + LINE_SIZE) * DIVISOR_LINE_SIZE) > 0) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void right(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position + 1);
+        if (assumedPosition.v() < (int)(position * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 
-    private void down(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position + LINE_SIZE;
-        if ((int)((assumedPosition) * DIVISOR_LINE_SIZE) * LINE_SIZE < FIELD_SIZE) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void up(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position - LINE_SIZE);
+        if ((int)((assumedPosition.v() + LINE_SIZE) * DIVISOR_LINE_SIZE) > 0) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 
-    private void left_up(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position - LINE_SIZE - 1;
-        if (((assumedPosition + LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition >= 0)) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void down(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position + LINE_SIZE);
+        if ((int)((assumedPosition).v() * DIVISOR_LINE_SIZE) * LINE_SIZE < FIELD_SIZE) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 
-    private void right_up(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position - LINE_SIZE + 1;
-        if (((assumedPosition + LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition >= 0)) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void left_up(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position - LINE_SIZE - 1);
+        if (((assumedPosition.v() + LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition.v() >= 0)) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 
-    private void left_down(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position + LINE_SIZE - 1;
-        if (((assumedPosition - LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition < FIELD_SIZE)) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void right_up(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position - LINE_SIZE + 1);
+        if (((assumedPosition.v() + LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition.v() >= 0)) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 
-    private void right_down(List<Integer> possibleMoves, int position) {
-        int assumedPosition = position + LINE_SIZE + 1;
-        if (((assumedPosition - LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition < FIELD_SIZE)) {
-            FieldState fieldState = game.getFieldState(assumedPosition);
-            if (fieldState == FieldState.NULL) {
-                possibleMoves.add(assumedPosition);
-            } else {
-                super.pieceAhead(possibleMoves, assumedPosition, fieldState);
-            }
+    @Override
+    protected void left_down(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position + LINE_SIZE - 1);
+        if (((assumedPosition.v() - LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition.v() < FIELD_SIZE)) {
+            handleMove(assumedPosition, 0, possibleMoves);
+        }
+    }
+
+    @Override
+    protected void right_down(List<Integer> possibleMoves, int position) {
+        MutableInteger assumedPosition = new MutableInteger(position + LINE_SIZE + 1);
+        if (((assumedPosition.v() - LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition.v() < FIELD_SIZE)) {
+            handleMove(assumedPosition, 0, possibleMoves);
         }
     }
 }
