@@ -1,8 +1,8 @@
-package at.kaindorf.pmz.pojos.chess.pieces;
+package at.kaindorf.pmz.chess.pieces;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.pojos.chess.FieldState;
-import at.kaindorf.pmz.pojos.chess.Piece;
+import at.kaindorf.pmz.chess.FieldState;
+import at.kaindorf.pmz.chess.Piece;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
 import java.util.List;

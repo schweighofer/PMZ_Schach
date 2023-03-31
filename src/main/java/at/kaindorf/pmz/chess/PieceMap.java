@@ -1,11 +1,11 @@
-package at.kaindorf.pmz.pojos.chess;
+package at.kaindorf.pmz.chess;
 
-import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Bishop;
-import at.kaindorf.pmz.pojos.chess.pieces.onestepper.King;
-import at.kaindorf.pmz.pojos.chess.pieces.onestepper.Knight;
-import at.kaindorf.pmz.pojos.chess.pieces.onestepper.Pawn;
-import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Queen;
-import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Rook;
+import at.kaindorf.pmz.chess.pieces.morestepper.Bishop;
+import at.kaindorf.pmz.chess.pieces.morestepper.Queen;
+import at.kaindorf.pmz.chess.pieces.morestepper.Rook;
+import at.kaindorf.pmz.chess.pieces.onestepper.King;
+import at.kaindorf.pmz.chess.pieces.onestepper.Knight;
+import at.kaindorf.pmz.chess.pieces.onestepper.Pawn;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,13 +1,13 @@
-package at.kaindorf.pmz.pojos.chess.pieces.onestepper;
+package at.kaindorf.pmz.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.pojos.chess.Piece;
-import at.kaindorf.pmz.pojos.chess.pieces.OneStepPiece;
+import at.kaindorf.pmz.chess.Piece;
+import at.kaindorf.pmz.chess.pieces.OneStepPiece;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.kaindorf.pmz.pojos.chess.pieces.MoveType.*;
+import static at.kaindorf.pmz.chess.pieces.MoveType.*;
 
 /**
  * @Author Marcus Schweighofer

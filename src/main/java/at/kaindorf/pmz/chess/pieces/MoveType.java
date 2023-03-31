@@ -1,4 +1,4 @@
-package at.kaindorf.pmz.pojos.chess.pieces;
+package at.kaindorf.pmz.chess.pieces;
 
 /**
  * @Author Marcus Schweighofer

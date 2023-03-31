@@ -1,7 +1,7 @@
-package at.kaindorf.pmz.pojos.chess;
+package at.kaindorf.pmz.chess;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.pojos.chess.pieces.MoveType;
+import at.kaindorf.pmz.chess.pieces.MoveType;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
 import java.lang.reflect.InvocationTargetException;
