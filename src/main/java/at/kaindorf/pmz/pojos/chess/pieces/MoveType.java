@@ -1,8 +1,5 @@
 package at.kaindorf.pmz.pojos.chess.pieces;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
 /**
  * @Author Marcus Schweighofer
  * Created on 30.03.2023.

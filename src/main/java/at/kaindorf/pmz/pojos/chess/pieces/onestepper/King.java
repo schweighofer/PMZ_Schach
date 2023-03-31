@@ -11,7 +11,7 @@ import static at.kaindorf.pmz.pojos.chess.pieces.MoveType.*;
 
 /**
  * @Author Marcus Schweighofer
- * Created on 24.03.2023.
+ * Created on 29.03.2023.
  * Class: King.java
  */
 
@@ -25,7 +25,7 @@ public class King extends OneStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        step(position, possibleMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+        moves(position, possibleMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
 
         // check if field is not blocked by other piece
 

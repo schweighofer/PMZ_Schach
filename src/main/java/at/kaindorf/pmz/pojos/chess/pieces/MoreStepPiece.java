@@ -5,13 +5,9 @@ import at.kaindorf.pmz.pojos.chess.FieldState;
 import at.kaindorf.pmz.pojos.chess.Piece;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import static at.kaindorf.pmz.bl.Game.*;
-import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
 
 /**
  * @Author Marcus Schweighofer
@@ -31,22 +27,6 @@ public abstract class MoreStepPiece extends Piece {
     public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
         return super.pieceAhead(possibleMoves, currentPosition, fieldState);
     }
-
-    @Override
-    protected boolean step(int position, List<Integer> possibleMoves, MoveType... types) {
-        for (MoveType type : types) {
-            try {
-                Method method = MoreStepPiece.class.getDeclaredMethod(type.name().toLowerCase(), List.class, int.class);
-                method.setAccessible(true);
-                method.invoke(this, possibleMoves, position);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return false;
-    }
-
-    // mutable integer unnötig ???
 
     @Override
     protected void left(List<Integer> possibleMoves, int position) {

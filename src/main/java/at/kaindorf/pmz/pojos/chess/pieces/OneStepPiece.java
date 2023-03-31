@@ -5,13 +5,9 @@ import at.kaindorf.pmz.pojos.chess.FieldState;
 import at.kaindorf.pmz.pojos.chess.Piece;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import static at.kaindorf.pmz.bl.Game.*;
-import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
 
 /**
  * @Author Marcus Schweighofer
@@ -33,32 +29,16 @@ public abstract class OneStepPiece extends Piece {
     }
 
     @Override
-    protected boolean step(int position, List<Integer> possibleMoves, MoveType... types) {
-        for (MoveType type : types) {
-            try {
-                Method method = OneStepPiece.class.getDeclaredMethod(type.name().toLowerCase(), List.class, int.class);
-                method.setAccessible(true);
-                method.invoke(this, possibleMoves, position);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-        return false;
-    }
-
-    @Override
     protected void pawn(List<Integer> possibleMoves, int position) {
-        int direction = (isBlack ? -1 : 1);
-        Integer assumedPosition = position + LINE_SIZE * direction;
+        int direction = (isBlack ? 1 : -1);
+        int assumedPosition = position + LINE_SIZE * direction;
         // Move
         if (assumedPosition >= 0 && assumedPosition < FIELD_SIZE) {
             FieldState fieldState = game.getFieldState(assumedPosition);
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
-                System.out.println((int)(assumedPosition * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE);
-                if (((int)(assumedPosition * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE) == (isBlack ? FIELD_SIZE - 2 * LINE_SIZE : 2 * LINE_SIZE)) {
-                    possibleMoves.add(assumedPosition + LINE_SIZE);
+                if (((int)(assumedPosition * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE * (isBlack ? -1 : 1)) == (isBlack ? LINE_SIZE : FIELD_SIZE - 2 * LINE_SIZE)) {
+                    possibleMoves.add(assumedPosition + LINE_SIZE * (isBlack ? 1 : -1));
                 }
             }
         }
@@ -112,7 +92,6 @@ public abstract class OneStepPiece extends Piece {
                 handleMove(possibleMove, 0, possibleMoves);
             }
         }
-
         // left down
         for (int i = 4; i < 6; i++) {
             MutableInteger possibleMove = new MutableInteger(position + options[i]);
@@ -120,7 +99,6 @@ public abstract class OneStepPiece extends Piece {
                 handleMove(possibleMove, 0, possibleMoves);
             }
         }
-
         // right up
         for (int i = 6; i < 8; i++) {
             MutableInteger possibleMove = new MutableInteger(position + options[i]);

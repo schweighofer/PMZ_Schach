@@ -25,7 +25,7 @@ public class Pawn extends OneStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        step(position, possibleMoves, PAWN);
+        moves(position, possibleMoves, PAWN);
 
         return possibleMoves;
     }

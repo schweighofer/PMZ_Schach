@@ -24,7 +24,7 @@ public class Bishop extends MoreStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        step(position, possibleMoves, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+        moves(position, possibleMoves, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
 
         return possibleMoves;
     }

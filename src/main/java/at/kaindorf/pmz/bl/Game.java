@@ -3,11 +3,11 @@ package at.kaindorf.pmz.bl;
 import at.kaindorf.pmz.pojos.chess.FieldState;
 import at.kaindorf.pmz.pojos.chess.Piece;
 import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Bishop;
+import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Queen;
+import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Rook;
 import at.kaindorf.pmz.pojos.chess.pieces.onestepper.King;
 import at.kaindorf.pmz.pojos.chess.pieces.onestepper.Knight;
 import at.kaindorf.pmz.pojos.chess.pieces.onestepper.Pawn;
-import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Queen;
-import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,12 @@ public class Game {
 
     private final List<Piece> board;
 
+    private Integer lastPiece;
+    private List<Integer> lastPossibleMoves;
+
     public Game() {
         this.board = new ArrayList<>();
-        //setupBoard();
-        setupTesting();
+        setupBoard();
     }
 
     private void setupBoard() {
@@ -83,10 +85,6 @@ public class Game {
         return board.indexOf(piece);
     }
 
-    public Boolean isFieldInbound(int index) {
-        return index >= 0 && index < FIELD_SIZE;
-    }
-
     public FieldState getFieldState(int index) {
         if (board.get(index) == null) {
             return FieldState.NULL;
@@ -107,6 +105,20 @@ public class Game {
                 .collect(Collectors.toList());
     }
 
+    public List<Integer> getPossibleMoves(int piecePosition) {
+        lastPiece = piecePosition;
+        lastPossibleMoves = board.get(lastPiece).getPossibleMoves();
+        return lastPossibleMoves;
+    }
+
+    public void move(int desiredPosition) {
+        if (!lastPossibleMoves.contains(desiredPosition)) {
+            throw new RuntimeException("Move not possible!");
+        }
+        board.set(desiredPosition, board.get(lastPiece));
+        board.set(lastPiece, null);
+    }
+
     public Boolean getBlackCheck() {
         return isBlackCheck;
     }
@@ -116,32 +128,23 @@ public class Game {
     }
 
     public List<Piece> getBoard() {
-        return board;
+        return this.board;
     }
 
     // DEBUG
-
-    private void setupTesting() {
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            board.add(null);
-        }
-
-        board.set(PMZController.TEST_POS1, new Knight(true, this));
-        board.set(PMZController.TEST_POS2, new Rook(false, this));
-    }
 
     public void printField() {
         for (int i = 0; i < LINE_SIZE; i++) {
             for (int j = 0; j < LINE_SIZE; j++) {
                 if (board.get(i * LINE_SIZE + j) == null) {
-                    System.out.print("+");
+                    System.out.print("\uF030");
                 } else {
                     System.out.print(board.get(i * LINE_SIZE + j));
                 }
-                //System.out.print("|");
             }
             System.out.println();
         }
+        System.out.println("-----------------------------------");
     }
 
     public Piece getPiece(int index) {

@@ -4,9 +4,9 @@ import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.pieces.MoveType;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
-import java.beans.Expression;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 
 /**
  * @Author Marcus Schweighofer
@@ -34,7 +34,18 @@ public abstract class Piece {
         return ((fieldState == FieldState.BLACK_KING) == isBlack);
     }
 
-    protected abstract boolean step(int position, List<Integer> possibleMoves, MoveType... types);
+    protected boolean moves(int position, List<Integer> possibleMoves, MoveType... types) {
+        for (MoveType type : types) {
+            try {
+                Method method = this.getClass().getSuperclass().getDeclaredMethod(type.name().toLowerCase(), List.class, int.class);
+                method.setAccessible(true);
+                method.invoke(this, possibleMoves, position);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return false;
+    }
 
     protected boolean handleMove(MutableInteger assumedPosition, int step, List<Integer> possibleMoves) {
         FieldState fieldState = game.getFieldState(assumedPosition.v());

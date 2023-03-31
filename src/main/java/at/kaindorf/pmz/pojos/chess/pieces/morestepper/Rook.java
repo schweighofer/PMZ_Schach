@@ -24,7 +24,7 @@ public class Rook extends MoreStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        step(position, possibleMoves, LEFT, RIGHT, UP, DOWN);
+        moves(position, possibleMoves, LEFT, RIGHT, UP, DOWN);
 
         return possibleMoves;
     }
