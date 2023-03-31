@@ -32,8 +32,7 @@ public abstract class MoreStepPiece extends Piece {
     }
 
     @Override
-    protected List<Integer> step(int position, MoveType... types) {
-        List<Integer> possibleMoves = new ArrayList<>();
+    protected boolean step(int position, List<Integer> possibleMoves, MoveType... types) {
         for (MoveType type : types) {
             try {
                 Method method = MoreStepPiece.class.getDeclaredMethod(type.name().toLowerCase(), List.class, int.class);
@@ -44,7 +43,7 @@ public abstract class MoreStepPiece extends Piece {
             }
 
         }
-        return possibleMoves;
+        return false;
     }
 
     private void left(List<Integer> possibleMoves, int position) {

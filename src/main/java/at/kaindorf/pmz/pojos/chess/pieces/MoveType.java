@@ -18,5 +18,6 @@ public enum MoveType {
     RIGHT_UP,
     LEFT_DOWN,
     RIGHT_DOWN,
-    PAWN
+    PAWN,
+    KNIGHT
 }

@@ -33,7 +33,7 @@ public abstract class Piece {
         return ((fieldState == FieldState.BLACK_KING) == isBlack);
     }
 
-    protected abstract List<Integer> step(int position, MoveType... types);
+    protected abstract boolean step(int position, List<Integer> possibleMoves, MoveType... types);
 
     public Integer getPosition() {
         return game.getPosition(this);

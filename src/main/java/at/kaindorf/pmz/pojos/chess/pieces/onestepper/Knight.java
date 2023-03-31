@@ -7,6 +7,8 @@ import at.kaindorf.pmz.pojos.chess.pieces.OneStepPiece;
 import java.util.ArrayList;
 import java.util.List;
 
+import static at.kaindorf.pmz.pojos.chess.pieces.MoveType.KNIGHT;
+
 /**
  * @Author Marcus Schweighofer
  * Created on 24.03.2023.
@@ -23,7 +25,7 @@ public class Knight extends OneStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-
+        step(position, possibleMoves, KNIGHT);
 
         return possibleMoves;
     }

@@ -25,10 +25,10 @@ public class Bishop extends MoreStepPiece {
 
     @Override
     public List<Integer> getPossibleMoves() {
-        List<Integer> possibleMoves;
+        List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        possibleMoves = step(position, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+        step(position, possibleMoves, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
 
         return possibleMoves;
     }

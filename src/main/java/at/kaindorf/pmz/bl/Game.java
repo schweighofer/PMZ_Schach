@@ -11,6 +11,7 @@ import at.kaindorf.pmz.pojos.chess.pieces.morestepper.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author Marcus Schweighofer
@@ -22,6 +23,8 @@ public class Game {
     public static final Integer LINE_SIZE = 8;
     public static final Float DIVISOR_LINE_SIZE = 1 / (float)(LINE_SIZE);
     public static final Integer FIELD_SIZE = LINE_SIZE * LINE_SIZE;
+
+    private Boolean isBlackCheck = null;
 
     private final List<Piece> board;
 
@@ -96,6 +99,26 @@ public class Game {
         return FieldState.valueOf(fieldState);
     }
 
+    public List<Piece> getAllOtherPieces(Piece piece) {
+        List<Piece> allOtherPieces = new ArrayList<>(board);
+        return allOtherPieces.stream()
+                .filter(p -> p != null)
+                .filter(p -> p.isBlack() != piece.isBlack())
+                .collect(Collectors.toList());
+    }
+
+    public Boolean getBlackCheck() {
+        return isBlackCheck;
+    }
+
+    public void setBlackCheck(Boolean blackCheck) {
+        isBlackCheck = blackCheck;
+    }
+
+    public List<Piece> getBoard() {
+        return board;
+    }
+
     // DEBUG
 
     private void setupTesting() {
@@ -103,7 +126,7 @@ public class Game {
             board.add(null);
         }
 
-        board.set(PMZController.TEST_POS1, new Rook(true, this));
+        board.set(PMZController.TEST_POS1, new Knight(true, this));
         board.set(PMZController.TEST_POS2, new Rook(false, this));
     }
 

@@ -25,10 +25,10 @@ public class Pawn extends OneStepPiece {
 
     @Override
     public List<Integer> getPossibleMoves() {
-        List<Integer> possibleMoves;
+        List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        possibleMoves = step(position, PAWN);
+        step(position, possibleMoves, PAWN);
 
         return possibleMoves;
     }

@@ -3,6 +3,7 @@ package at.kaindorf.pmz.pojos.chess.pieces.morestepper;
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.pojos.chess.pieces.MoreStepPiece;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static at.kaindorf.pmz.pojos.chess.pieces.MoveType.*;
@@ -20,10 +21,10 @@ public class Rook extends MoreStepPiece {
 
     @Override
     public List<Integer> getPossibleMoves() {
-        List<Integer> possibleMoves;
+        List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        possibleMoves = step(position, LEFT, RIGHT, UP, DOWN);
+        step(position, possibleMoves, LEFT, RIGHT, UP, DOWN);
 
         return possibleMoves;
     }
