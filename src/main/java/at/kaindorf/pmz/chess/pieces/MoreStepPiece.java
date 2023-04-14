@@ -21,7 +21,7 @@ public abstract class MoreStepPiece extends Piece {
     }
 
     @Override
-    public abstract List<Integer> getPossibleMoves();
+    public abstract List<Integer> obtainPossibleMoves();
 
     @Override
     public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {

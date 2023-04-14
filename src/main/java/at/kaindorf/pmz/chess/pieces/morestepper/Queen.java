@@ -20,7 +20,7 @@ public class Queen extends MoreStepPiece {
     }
 
     @Override
-    public List<Integer> getPossibleMoves() {
+    public List<Integer> obtainPossibleMoves() {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 

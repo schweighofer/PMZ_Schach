@@ -3,6 +3,7 @@ package at.kaindorf.pmz.chess;
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.chess.pieces.MoveType;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,10 +24,11 @@ public abstract class Piece {
         this.game = game;
     }
 
-    public abstract List<Integer> getPossibleMoves();
+    @JsonbTransient
+    public abstract List<Integer> obtainPossibleMoves();
 
     // handles enemy pieces and only returns true if the piece is the enemy king
-    public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
+    protected boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
         if ((fieldState == FieldState.BLACK) != isBlack) {
             possibleMoves.add(currentPosition);
             return false;
@@ -69,21 +71,16 @@ public abstract class Piece {
     protected abstract void right_down(List<Integer> possibleMoves, int position);
     protected abstract void pawn(List<Integer> possibleMoves, int position);
     protected abstract void knight(List<Integer> possibleMoves, int position);
+    @JsonbTransient
+    public Boolean isBlack() {
+        return isBlack;
+    }
 
     public Integer getPosition() {
         return game.getPosition(this);
     }
 
-    public Boolean isBlack() {
-        return isBlack;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    @Override
-    public String toString() {
-        return "" + PieceMap.get(this);
+    public char getChar() {
+        return PieceMap.get(this);
     }
 }

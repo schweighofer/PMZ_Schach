@@ -1,5 +1,11 @@
 package at.kaindorf.pmz.bl;
 
+import at.kaindorf.pmz.chess.Piece;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author Marcus Schweighofer
  * Created on 29.03.2023.
@@ -8,7 +14,21 @@ package at.kaindorf.pmz.bl;
 
 public class PMZController {
 
-    public static int TEST_POS1 = 48;
+    private Map<Integer, Game> games = new HashMap<>();
+
+    public void startGame(Integer id) {
+        games.put(id, new Game());
+    }
+
+    public List<Piece> getBoard(Integer id) {
+        // das hier problem
+        games.put(id, new Game());
+        return games.get(id).getBoard();
+    }
+
+    public List<Integer> getPossibleMoves(Integer id, Integer position) {
+        return games.get(id).getPossibleMoves(position);
+    }
 
     public static void main(String[] args) {
         Game game = new Game();

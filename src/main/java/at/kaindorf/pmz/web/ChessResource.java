@@ -1,34 +1,39 @@
 package at.kaindorf.pmz.web;
 
-import at.kaindorf.pmz.bl.Game;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import at.kaindorf.pmz.bl.PMZController;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
 @Path("/chess")
 public class ChessResource {
-
-    private Game game;
-
-    @GET
-    @Path("/init")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response initSession() {
-        String session = "12345";
-        return Response.accepted(session).build();
-    }
+    // in zukunft list, map ?
+    private PMZController controller = new PMZController();
 
     @GET
     @Path("/start")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStartingField() {
-        game = new Game();
-        return Response.accepted(game.getBoard()).build();
+    public Response startGame() {
+        Integer id = 1234;
+        controller.startGame(id);
+        return Response.accepted(id).build();
+    }
+
+    @GET
+    @Path("/board/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBoard(@PathParam("id") Integer id) {
+        return Response.ok(controller.getBoard(id)).build();
+    }
+
+    @GET
+    @Path("/moves/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPossibleMoves(@PathParam("id") Integer id, @QueryParam("position") Integer position) {
+        return Response.ok(controller.getPossibleMoves(id, position)).build();
     }
 }

@@ -107,7 +107,7 @@ public class Game {
 
     public List<Integer> getPossibleMoves(int piecePosition) {
         lastPiece = piecePosition;
-        lastPossibleMoves = board.get(lastPiece).getPossibleMoves();
+        lastPossibleMoves = board.get(lastPiece).obtainPossibleMoves();
         return lastPossibleMoves;
     }
 
@@ -139,7 +139,7 @@ public class Game {
                 if (board.get(i * LINE_SIZE + j) == null) {
                     System.out.print("\uF030");
                 } else {
-                    System.out.print(board.get(i * LINE_SIZE + j));
+                    System.out.print(board.get(i * LINE_SIZE + j).getChar());
                 }
             }
             System.out.println();

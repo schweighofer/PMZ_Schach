@@ -1,7 +1,6 @@
 package at.kaindorf.pmz.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.chess.Piece;
 import at.kaindorf.pmz.chess.pieces.OneStepPiece;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class King extends OneStepPiece {
     }
 
     @Override
-    public List<Integer> getPossibleMoves() {
+    public List<Integer> obtainPossibleMoves() {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
@@ -29,12 +28,12 @@ public class King extends OneStepPiece {
 
         // check if field is not blocked by other piece
 
-        List<Piece> allOtherPieces = game.getAllOtherPieces(this);
-        for (Piece p : allOtherPieces) {
-            for (Integer i : p.getPossibleMoves()) {
-                possibleMoves.remove(i);
-            }
-        }
+        //List<Piece> allOtherPieces = game.getAllOtherPieces(this);
+        //for (Piece p : allOtherPieces) {
+        //    for (Integer i : p.getPossibleMoves()) {
+        //        possibleMoves.remove(i);
+        //    }
+        //}
 
         return possibleMoves;
     }
