@@ -6,6 +6,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
+/**
+ * @Author Marcus Schweighofer
+ * Created on 24.03.2023.
+ * Class: ChessResource.java
+ */
+
 @Path("/chess")
 public class ChessResource {
     // in zukunft list, map ?
