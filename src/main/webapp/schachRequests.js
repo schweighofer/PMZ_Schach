@@ -27,7 +27,7 @@ var startGame = function () {
         console.log(GAMEID);
     })
         .catch(function (err) {
-        document.getElementById("error").innerText = err;
+        console.log(err);
     });
     document.getElementById("gameID").innerHTML = "your gameID is: " + GAMEID;
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + GAMEID;
@@ -42,11 +42,21 @@ var startGame = function () {
         displayGameBoard(gameBoardJSON);
     })
         .catch(function (err) {
-        document.getElementById("error").innerText = err;
+        console.log(err);
     });
 };
 var displayGameBoard = function (gameBoardJSON) {
-    console.log(gameBoardJSON);
+    //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
+    for (var _i = 0, _a = Object.entries(gameBoardJSON); _i < _a.length; _i++) {
+        var _b = _a[_i], key = _b[0], value = _b[1];
+        if (value == null) {
+            console.log(key + " ");
+        }
+        else {
+            console.log(key + " " + value.char);
+        }
+    }
+    //todo: schleife ausm html nehmen
 };
 var joinGame = function () {
     document.getElementById("startGameButton").style.display = "none";

@@ -32,7 +32,7 @@ const startGame = () => {
             console.log(GAMEID);
         })
         .catch(err => {
-            document.getElementById("error").innerText = err;
+            console.log(err);
         })
 
     document.getElementById("gameID").innerHTML ="your gameID is: "+GAMEID;
@@ -49,11 +49,19 @@ const startGame = () => {
             displayGameBoard(gameBoardJSON);
         })
         .catch(err => {
-            document.getElementById("error").innerText = err;
+            console.log(err);
         })
 }
 const displayGameBoard = (gameBoardJSON) =>{
-    console.log(gameBoardJSON)
+    //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
+    for(const [key, value] of Object.entries(gameBoardJSON)) {
+        if (value == null) {
+            console.log(key + " ");
+        } else {
+            console.log(key + " " + value.char);
+        }
+    }
+        //todo: schleife ausm html nehmen
 }
 const joinGame = () => {
     document.getElementById("startGameButton").style.display = "none";
