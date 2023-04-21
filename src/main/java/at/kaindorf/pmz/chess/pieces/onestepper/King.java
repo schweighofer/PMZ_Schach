@@ -1,10 +1,12 @@
 package at.kaindorf.pmz.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
+import at.kaindorf.pmz.chess.Piece;
 import at.kaindorf.pmz.chess.pieces.OneStepPiece;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static at.kaindorf.pmz.chess.pieces.MoveType.*;
 
@@ -28,12 +30,15 @@ public class King extends OneStepPiece {
 
         // check if field is not blocked by other piece
 
-        //List<Piece> allOtherPieces = game.getAllOtherPieces(this);
-        //for (Piece p : allOtherPieces) {
-        //    for (Integer i : p.getPossibleMoves()) {
-        //        possibleMoves.remove(i);
-        //    }
-        //}
+        List<Piece> allOtherPieces = game.getAllOtherPieces(this);
+        for (Piece p : allOtherPieces) {
+            for (Integer i : p.obtainPossibleMoves().stream()
+                    .filter(k -> !k.equals(position))
+                    .collect(Collectors.toList())
+            ) {
+                possibleMoves.remove(i);
+            }
+        }
 
         return possibleMoves;
     }
