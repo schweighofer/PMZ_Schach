@@ -22,12 +22,14 @@ const startGame = () => {
     fetch(url)
         .then(res => {
             if (!res.ok) {
-                throw new Error("GET REQUEST FAILED - Couldn't get all trains");
+                throw new Error("GET REQUEST FAILED");
             }
             return res.json();
         })
         .then(gameIDJSON => {
+            console.log(gameIDJSON);
             GAMEID = gameIDJSON;
+            console.log(GAMEID);
         })
         .catch(err => {
             document.getElementById("error").innerText = err;
@@ -39,7 +41,7 @@ const startGame = () => {
     fetch(url)
         .then(res => {
             if (!res.ok) {
-                throw new Error("GET REQUEST FAILED - Couldn't get all trains");
+                throw new Error("GET REQUEST FAILED");
             }
             return res.json();
         })
@@ -50,7 +52,9 @@ const startGame = () => {
             document.getElementById("error").innerText = err;
         })
 }
-displayGameBoard(gameBoardJSON);
+const displayGameBoard = (gameBoardJSON) =>{
+    console.log(gameBoardJSON)
+}
 const joinGame = () => {
     document.getElementById("startGameButton").style.display = "none";
     document.getElementById("joinGameButton").style.display = "none";
