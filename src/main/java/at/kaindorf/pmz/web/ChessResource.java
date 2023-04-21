@@ -40,4 +40,15 @@ public class ChessResource {
     public Response getPossibleMoves(@PathParam("id") Integer id, @QueryParam("position") Integer position) {
         return Response.ok(PMZController.getInstance().getPossibleMoves(id, position)).build();
     }
+
+    @POST
+    @Path("/move/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response makeMove(@PathParam("id") Integer id, @QueryParam("target") Integer target) {
+        if (PMZController.getInstance().makeMove(id, target)) {
+            return Response.accepted().build();
+        }
+        return Response.notModified().build();
+    }
 }
