@@ -111,12 +111,13 @@ public class Game {
         return lastPossibleMoves;
     }
 
-    public void move(int desiredPosition) {
+    public boolean move(int desiredPosition) {
         if (!lastPossibleMoves.contains(desiredPosition)) {
-            throw new RuntimeException("Move not possible!");
+            return false;
         }
         board.set(desiredPosition, board.get(lastPiece));
         board.set(lastPiece, null);
+        return true;
     }
 
     public Boolean getBlackCheck() {

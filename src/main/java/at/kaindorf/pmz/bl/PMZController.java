@@ -44,4 +44,8 @@ public class PMZController {
         }
         return new ArrayList<Integer>();
     }
+
+    public boolean makeMove(Integer id, Integer target) {
+        return games.get(id / 10 * 10).move(target);
+    }
 }
