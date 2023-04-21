@@ -37,6 +37,7 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- JSON Bind -->
         <!-- https://mvnrepository.com/artifact/jakarta.json.bind/jakarta.json.bind-api -->
         <dependency>
@@ -45,7 +46,6 @@
             <version>3.0.0</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

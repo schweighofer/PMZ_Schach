@@ -2,6 +2,7 @@ package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.chess.Piece;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +15,30 @@ import java.util.Map;
 
 public class PMZController {
 
+    private static PMZController theInstance = new PMZController();
+
+    public static PMZController getInstance() {
+        return theInstance;
+    }
+
+    private PMZController() {
+    }
+
+    private int maxGameId = 0;
     private Map<Integer, Game> games = new HashMap<>();
 
-    public void startGame(Integer id) {
-        games.put(id, new Game());
+    public int startGame() {
+        games.put(maxGameId, new Game());
+        maxGameId += 2;
+        return maxGameId - 2;
     }
 
     public List<Piece> getBoard(Integer id) {
-        // das hier problem
-        games.put(id, new Game());
-        return games.get(id).getBoard();
+        List<Piece> board = games.get(id / 10 * 10).getBoard();
+        if (id % 2 == 0) {
+            Collections.reverse(board);
+        }
+        return board;
     }
 
     public List<Integer> getPossibleMoves(Integer id, Integer position) {

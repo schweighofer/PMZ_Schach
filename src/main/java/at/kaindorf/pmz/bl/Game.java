@@ -128,7 +128,7 @@ public class Game {
     }
 
     public List<Piece> getBoard() {
-        return this.board;
+        return new ArrayList<>(this.board);
     }
 
     // DEBUG
