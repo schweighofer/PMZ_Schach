@@ -44,7 +44,7 @@
           border: 0.5px solid #000;
         }
     </style>
-
+    <script src="schachRequests.js"></script>
     <script>            /*
             S_T: Schwarzer Turm
             S_P: Schwarzes Pferd
@@ -867,63 +867,8 @@
 
             let isPosWaysKinEmpty = positionsibleWaysKini(name, oriButtonVal);
         }
-
-        let name;
-        let hash = "testestHx1245329gjsigh";
-        function firstLoad(){
-            loadField();
-            document.getElementById("popUp").innerHTML = "<div style=\"background-color: red; position: absolute;  top: 56%; left: 50%;transform: translate(-50%, -50%); height: 50vh; width: 50vh;\"><h1 style=\"text-align: center;\">ALERT!</h1><p style=\"text-align: center; font-size: larger;\">please input your name:</p><div style=\"display: flex; justify-content: center; align-items: center;\"><input type=\"text\" id=\"name\"/><button onclick=\"nameInputed();\">go!</button></div></div>"
-            document.getElementById("popUp").style.backgroundColor = "red";
-        }
-        
-        function nameInputed(){
-            name = /*<HTMLInputElement>*/(document.getElementById("name")).value;
-            console.log("your name is: " + name);
-            
-            document.getElementById("popUp").style.display = "none";
-        }
-        function startGame(){
-            document.getElementById("startGameButton").style.display = "none";
-            document.getElementById("joinGameButton").style.display = "none";
-
-            //todo: startGame request
-
-            document.getElementById("gameID").innerHTML ="your gameID is: 1235"
-
-            //todo: getBoard request
-        }
-        function joinGame(){
-            document.getElementById("startGameButton").style.display = "none";
-            document.getElementById("joinGameButton").style.display = "none";
-
-            document.getElementById("popUp").style.display = "block";
-            document.getElementById("popUp").innerHTML = "<div style=\"background-color: aqua; position: absolute;  top: 56%; left: 50%;transform: translate(-50%, -50%); height: 50vh; width: 50vh;\"><p>Enter the your given hashcode: </p><input type=\"text\" id=\"hash\"/><button onclick=\"hashInputed();\">go!</button></div>"
-
-        }
-        function hashInputed(){
-            hash = /*<HTMLInputElement>*/(document.getElementById("hash")).value;
-            document.getElementById("popUp").style.display = "none";
-            console.log("your hash is: " + hash);
-            //todo: getBoard request
-
-        }
-        //function gameLoop(){}
-            //todo: Gameloop die immer requested und schaut ob aktuel alles ist
-        
-        /*
-        requests die wir brauchen
-
-            startGame Request den gameID von dieser Session Zurückgibt
-
-            getBoard request welcher das spielfeld gibt, und als parameter den gameID oder gameID+1 bekommt. gameID+1 is für schwarz, gameID is für weiß
-
-            getPossibleMoves request welcher int vom angeklickten Feld und gameID oder gameID+1 bekommt und array an ints zurückgibt  und diese grün markiert, eine onclick=""verleiht welcher makeMove request macht.
-
-            makeMove request welcher hash den zug bekommt. Im backend wird dieser Zug eingetragen und der andere kommt am zug.
-
-
-        */
     </script>
+
 </head>
 
 <body onload="firstLoad();">
