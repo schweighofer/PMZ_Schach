@@ -2,6 +2,7 @@ package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.chess.FieldState;
 import at.kaindorf.pmz.chess.Piece;
+import at.kaindorf.pmz.chess.pieces.Empty;
 import at.kaindorf.pmz.chess.pieces.morestepper.Bishop;
 import at.kaindorf.pmz.chess.pieces.morestepper.Queen;
 import at.kaindorf.pmz.chess.pieces.morestepper.Rook;
@@ -58,7 +59,7 @@ public class Game {
 
         // null rows
         for (int i = 16; i < 48; i++) {
-            board.add(null);
+            board.add(new Empty(this));
         }
 
         // bottom row

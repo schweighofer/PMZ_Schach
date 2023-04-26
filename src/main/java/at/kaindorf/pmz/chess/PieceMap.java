@@ -1,5 +1,6 @@
 package at.kaindorf.pmz.chess;
 
+import at.kaindorf.pmz.chess.pieces.Empty;
 import at.kaindorf.pmz.chess.pieces.morestepper.Bishop;
 import at.kaindorf.pmz.chess.pieces.morestepper.Queen;
 import at.kaindorf.pmz.chess.pieces.morestepper.Rook;
@@ -26,6 +27,7 @@ public class PieceMap {
         pieceMap.put(Bishop.class,  '♗');
         pieceMap.put(Knight.class,  '♘');
         pieceMap.put(Pawn.class,    '♙');
+        pieceMap.put(Empty.class,   ' ');
     }
 
     public static Character get(Piece piece) {
