@@ -59,9 +59,9 @@ var displayGameBoard = function (gameBoardJSON, moveAbles) {
         if ((key % 8) == 0) {
             reihe = reihe + 1;
         }
-        if (value.position in moveAbles) {
+        if (Object.values(moveAbles).includes(value.position)) {
             html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
-            html += key;
+            console.log(value.position + " : " + moveAbles);
         }
         else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
             html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
@@ -114,7 +114,22 @@ var planmoveOnline = function (position) {
         return res.json();
     })
         .then(function (moveAbleJSON) {
-        console.log(moveAbleJSON);
+        console.log(Object.values(moveAbleJSON));
+        var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + GAMEID;
+        fetch(url)
+            .then(function (res) {
+            if (!res.ok) {
+                throw new Error("GET REQUEST FAILED");
+            }
+            return res.json();
+        })
+            .then(function (gameBoardJSON) {
+            displayGameBoard(gameBoardJSON, Object.values(moveAbleJSON));
+            console.log("aaa");
+        })
+            .catch(function (err) {
+            console.log(err);
+        });
     })
         .catch(function (err) {
         console.log(err);
