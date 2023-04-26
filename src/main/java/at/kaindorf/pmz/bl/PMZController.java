@@ -2,7 +2,12 @@ package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.chess.Piece;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
 
 /**
  * @Author Marcus Schweighofer
@@ -31,21 +36,31 @@ public class PMZController {
     }
 
     public List<Piece> getBoard(Integer id) {
-        List<Piece> board = games.get(id / 10 * 10).getBoard();
+        List<Piece> board = games.get(id / 2 * 2).getBoard();
         if (id % 2 == 0) {
-            Collections.reverse(board);
+            return turnBoard(board);
         }
         return board;
     }
 
+    public static List<Piece> turnBoard(List<Piece> board) {
+        List<Piece> turnedBoard = new ArrayList<>();
+        for (int i = LINE_SIZE * LINE_SIZE - LINE_SIZE; i >= 0; i -= LINE_SIZE) {
+            for (int j = 0; j < LINE_SIZE; j++) {
+                turnedBoard.add(board.get(i + j));
+            }
+        }
+        return turnedBoard;
+    }
+
     public List<Integer> getPossibleMoves(Integer id, Integer position) {
-        if ((id % 2 == 0) != (games.get(id / 10 * 10).getPiece(position).isBlack())) {
-            return games.get(id / 10 * 10).getPossibleMoves(position);
+        if ((id % 2 == 0) != (games.get(id / 2 * 2).getPiece(position).isBlack())) {
+            return games.get(id / 2 * 2).getPossibleMoves(position);
         }
         return new ArrayList<Integer>();
     }
 
     public boolean makeMove(Integer id, Integer target) {
-        return games.get(id / 10 * 10).move(target);
+        return games.get(id / 2 * 2).move(target);
     }
 }

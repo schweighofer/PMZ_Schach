@@ -76,7 +76,6 @@ public abstract class Piece {
         return isBlack;
     }
 
-    @JsonbTransient
     public Integer getPosition() {
         return game.getPosition(this);
     }
