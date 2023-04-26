@@ -1,5 +1,4 @@
-let NAME = "";
-let GAMEID = 0;
+var NAME:string = "";
 
 const firstLoad = () => {
     // @ts-ignore
@@ -15,11 +14,13 @@ const nameInputed = (): void => {
     document.getElementById("popUp").style.display = "none";
 }
 
+
 const startGame = () => {
     document.getElementById("startGameButton").style.display = "none";
     document.getElementById("joinGameButton").style.display = "none";
 
     // @ts-ignore
+    var GAMEID:number;
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start`;
     fetch(url)
         .then(res => {
@@ -30,14 +31,15 @@ const startGame = () => {
         })
         .then(gameIDJSON => {
             console.log(gameIDJSON);
-            GAMEID = gameIDJSON;
+            GAMEID = parseInt(gameIDJSON);
             console.log(GAMEID);
+            document.getElementById("gameID").innerHTML = "<p>your gameID is: "+GAMEID+"</p><p>the gameID toshare is:"+(GAMEID+1)+"</p>";
         })
         .catch(err => {
             console.log(err);
         })
 
-    document.getElementById("gameID").innerHTML ="your gameID is: "+GAMEID;
+
 
     // @ts-ignore
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
@@ -49,35 +51,81 @@ const startGame = () => {
             return res.json();
         })
         .then(gameBoardJSON => {
-            displayGameBoard(gameBoardJSON);
+            displayGameBoard(gameBoardJSON, []);
         })
         .catch(err => {
             console.log(err);
         })
 }
-const displayGameBoard = (gameBoardJSON) =>{
+const displayGameBoard = (gameBoardJSON, moveAbles) =>{
     //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
+    var reihe : number = 1;
+    var html : string = "";
     for(const [key, value] of Object.entries(gameBoardJSON)) {
-        if (value == null) {
-            console.log(key + " ");
-        } else {
-            console.log(key + " " + value.char);
+        if ((key % 8) ==  0) {
+            reihe = reihe + 1;
         }
+        if(key in moveAbles){
+            if(value == null){
+                html += "<input type=\"button\" class=\"greenField\" value=\"" + " " + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
+
+            } else{
+                html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
+
+            }
+
+        }
+        else if (((key % 2) != 0 && (reihe % 2) ==  0)||((key % 2) ==  0 && (reihe % 2) != 0)) {
+            if(value == null){
+                html += "<input type=\"button\" class=\"blackField\" value=\"" + " " + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
+
+            } else{
+                html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
+            }
+        }
+        else {
+            if(value == null){
+                html += "<input type=\"button\" class=\"whiteField\" value=\"" + " " + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
+
+            } else{
+                html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
+            }
+        }
+
+        if ((parseInt(key) + 1) % 8 ==  0) {
+            html += "<br>";
+        }
+        //console.log(html);
+        document.getElementById("playingField").innerHTML = html;
+
     }
-        //todo: schleife ausm html nehmen
+
 }
 const joinGame = () => {
     document.getElementById("startGameButton").style.display = "none";
     document.getElementById("joinGameButton").style.display = "none";
 
     document.getElementById("popUp").style.display = "block";
-    document.getElementById("popUp").innerHTML = "<div style=\"background-color: aqua; position: absolute;  top: 56%; left: 50%;transform: translate(-50%, -50%); height: 50vh; width: 50vh;\"><p>Enter the your given hashcode: </p><input type=\"text\" id=\"hash\"/><button onclick=\"hashInputed();\">go!</button></div>"
+    document.getElementById("popUp").innerHTML = "<div style=\"background-color: aqua; position: absolute;  top: 56%; left: 50%;transform: translate(-50%, -50%); height: 50vh; width: 50vh;\"><p>Enter the your given hashcode: </p><input type=\"text\" id=\"hash\"/><button onclick=\"gameIDInputed();\">go!</button></div>"
 
 }
-const hashInputed = (): void => {
+const gameIDInputed = (): void => {
     // @ts-ignore
-    GAMEID = (document.getElementById("hash") as HTMLInputElement).value;
+    var GAMEID:number = (document.getElementById("hash") as HTMLInputElement).value;
     document.getElementById("popUp").style.display = "none";
     console.log("your hash is: " + GAMEID);
-    //todo: getBoard request
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
+    fetch(url)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("GET REQUEST FAILED");
+            }
+            return res.json();
+        })
+        .then(gameBoardJSON => {
+            displayGameBoard(gameBoardJSON, []);
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }
