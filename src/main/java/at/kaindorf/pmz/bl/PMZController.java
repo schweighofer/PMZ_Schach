@@ -54,7 +54,7 @@ public class PMZController {
     }
 
     public List<Integer> getPossibleMoves(Integer id, Integer position) {
-        if ((id % 2 == 0) != (games.get(id / 2 * 2).getPiece(position).isBlack())) {
+        if ((id % 2 == 0) == (games.get(id / 2 * 2).getPiece(position).isBlack())) {
             return games.get(id / 2 * 2).getPossibleMoves(position);
         }
         return new ArrayList<Integer>();
@@ -67,6 +67,7 @@ public class PMZController {
     public static void main(String[] args) {
         Game game = new Game();
         game.printField();
-        System.out.println(game.getPossibleMoves(1));
+        System.out.println(game.getPossibleMoves(8));
+        System.out.println(game.getPossibleMoves(48));
     }
 }
