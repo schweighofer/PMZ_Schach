@@ -1,4 +1,6 @@
 var NAME:string = "";
+var GAMEID:number;
+
 
 const firstLoad = () => {
     // @ts-ignore
@@ -20,7 +22,7 @@ const startGame = () => {
     document.getElementById("joinGameButton").style.display = "none";
 
     // @ts-ignore
-    var GAMEID:number;
+    var gameID:number;
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start`;
     fetch(url)
         .then(res => {
@@ -31,9 +33,25 @@ const startGame = () => {
         })
         .then(gameIDJSON => {
             console.log(gameIDJSON);
-            GAMEID = parseInt(gameIDJSON);
-            console.log(GAMEID);
-            document.getElementById("gameID").innerHTML = "<p>your gameID is: "+GAMEID+"</p><p>the gameID toshare is:"+(GAMEID+1)+"</p>";
+            gameID = parseInt(gameIDJSON);
+            console.log(gameID);
+            document.getElementById("gameID").innerHTML = "<p>your gameID is: "+gameID+"</p><p>the gameID toshare is:"+(gameID+1)+"</p>";
+            // @ts-ignore
+            const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
+            GAMEID = gameID;
+            fetch(url)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error("GET REQUEST FAILED");
+                    }
+                    return res.json();
+                })
+                .then(gameBoardJSON => {
+                    displayGameBoard(gameBoardJSON, []);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         })
         .catch(err => {
             console.log(err);
@@ -41,55 +59,28 @@ const startGame = () => {
 
 
 
-    // @ts-ignore
-    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
-    fetch(url)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("GET REQUEST FAILED");
-            }
-            return res.json();
-        })
-        .then(gameBoardJSON => {
-            displayGameBoard(gameBoardJSON, []);
-        })
-        .catch(err => {
-            console.log(err);
-        })
+
 }
 const displayGameBoard = (gameBoardJSON, moveAbles) =>{
     //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
     var reihe : number = 1;
     var html : string = "";
+
     for(const [key, value] of Object.entries(gameBoardJSON)) {
         if ((key % 8) ==  0) {
             reihe = reihe + 1;
         }
-        if(key in moveAbles){
-            if(value == null){
-                html += "<input type=\"button\" class=\"greenField\" value=\"" + " " + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
 
-            } else{
-                html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
-
-            }
+        if(value.position in moveAbles){
+            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"planmoveOnline("+value.position+");\">";
+            html += key;
 
         }
         else if (((key % 2) != 0 && (reihe % 2) ==  0)||((key % 2) ==  0 && (reihe % 2) != 0)) {
-            if(value == null){
-                html += "<input type=\"button\" class=\"blackField\" value=\"" + " " + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
-
-            } else{
-                html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
-            }
+            html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline("+value.position+");\">";
         }
         else {
-            if(value == null){
-                html += "<input type=\"button\" class=\"whiteField\" value=\"" + " " + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
-
-            } else{
-                html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"/*planmove(value.position)*/\">";
-            }
+            html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline("+value.position+");\">";
         }
 
         if ((parseInt(key) + 1) % 8 ==  0) {
@@ -111,10 +102,11 @@ const joinGame = () => {
 }
 const gameIDInputed = (): void => {
     // @ts-ignore
-    var GAMEID:number = (document.getElementById("hash") as HTMLInputElement).value;
+    var gameID:number = (document.getElementById("hash") as HTMLInputElement).value;
     document.getElementById("popUp").style.display = "none";
-    console.log("your hash is: " + GAMEID);
-    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
+    console.log("your hash is: " + gameID);
+    GAMEID = gameID;
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
     fetch(url)
         .then(res => {
             if (!res.ok) {
@@ -124,6 +116,25 @@ const gameIDInputed = (): void => {
         })
         .then(gameBoardJSON => {
             displayGameBoard(gameBoardJSON, []);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+const planmoveOnline = (position) => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/` +GAMEID+"?position="+position;
+    console.log(url);
+    fetch(url)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("GET REQUEST FAILED");
+            }
+            return res.json();
+        })
+        .then(moveAbleJSON => {
+            console.log(moveAbleJSON);
+
         })
         .catch(err => {
             console.log(err);
