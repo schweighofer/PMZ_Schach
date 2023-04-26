@@ -49,7 +49,7 @@ public abstract class Piece {
         return false;
     }
 
-    protected boolean handleMove(MutableInteger assumedPosition, int step, List<Integer> possibleMoves) {
+    public boolean handleMove(MutableInteger assumedPosition, int step, List<Integer> possibleMoves) {
         FieldState fieldState = game.getFieldState(assumedPosition.v());
         if (fieldState == FieldState.NULL) {
             possibleMoves.add(assumedPosition.v());

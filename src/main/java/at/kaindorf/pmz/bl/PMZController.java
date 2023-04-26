@@ -63,4 +63,10 @@ public class PMZController {
     public boolean makeMove(Integer id, Integer target) {
         return games.get(id / 2 * 2).move(target);
     }
+
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.printField();
+        System.out.println(game.getPossibleMoves(1));
+    }
 }

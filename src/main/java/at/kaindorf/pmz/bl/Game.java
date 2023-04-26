@@ -87,7 +87,7 @@ public class Game {
     }
 
     public FieldState getFieldState(int index) {
-        if (board.get(index) == null) {
+        if (board.get(index) instanceof Empty) {
             return FieldState.NULL;
         }
         Piece piece = board.get(index);
@@ -138,7 +138,7 @@ public class Game {
     public void printField() {
         for (int i = 0; i < LINE_SIZE; i++) {
             for (int j = 0; j < LINE_SIZE; j++) {
-                if (board.get(i * LINE_SIZE + j) == null) {
+                if (board.get(i * LINE_SIZE + j) instanceof Empty) {
                     System.out.print("\uF030");
                 } else {
                     System.out.print(board.get(i * LINE_SIZE + j).getChar());
