@@ -64,8 +64,8 @@ public class PMZController {
         return games.get(id / 2 * 2).move(target);
     }
 
-    public boolean hasBlacTurn(Integer id) {
-        return games.get(id / 2 * 2).isHasBlackTurn();
+    public boolean hasBlackTurn(Integer id) {
+        return games.get(id / 2 * 2).isHasWhiteTurn();
     }
 
     public static void main(String[] args) {

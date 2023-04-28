@@ -25,8 +25,8 @@ public class Game {
     public static final Float DIVISOR_LINE_SIZE = 1 / (float)(LINE_SIZE);
     public static final Integer FIELD_SIZE = LINE_SIZE * LINE_SIZE;
 
-    private boolean hasBlackTurn = false;
-    private Boolean isBlackCheck = null;
+    private boolean hasWhiteTurn = false;
+    private Boolean isWhiteCheck = null;
 
     private final List<Piece> board;
 
@@ -117,18 +117,18 @@ public class Game {
         if (!lastPossibleMoves.contains(desiredPosition)) {
             return false;
         }
-        hasBlackTurn = !hasBlackTurn;
+        hasWhiteTurn = !hasWhiteTurn;
         board.set(desiredPosition, board.get(lastPiece));
         board.set(lastPiece, new Empty(this));
         return true;
     }
 
     public Boolean getBlackCheck() {
-        return isBlackCheck;
+        return isWhiteCheck;
     }
 
     public void setBlackCheck(Boolean blackCheck) {
-        isBlackCheck = blackCheck;
+        isWhiteCheck = blackCheck;
     }
 
     public List<Piece> getBoard() {
@@ -155,7 +155,7 @@ public class Game {
         return board.get(index);
     }
 
-    public boolean isHasBlackTurn() {
-        return hasBlackTurn;
+    public boolean isHasWhiteTurn() {
+        return hasWhiteTurn;
     }
 }

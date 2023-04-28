@@ -43,6 +43,9 @@ public class ChessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response makeMove(@PathParam("id") Integer id, @QueryParam("target") Integer target) {
+        if ((id % 2 == 0) != PMZController.getInstance().hasBlackTurn(id)) {
+            return Response.notAcceptable(null).build();
+        }
         if (PMZController.getInstance().makeMove(id, target)) {
             return Response.accepted(PMZController.getInstance().getBoard(id)).build();
         }
@@ -54,6 +57,6 @@ public class ChessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWhoIsTurn(@PathParam("id") Integer id) {
-        return Response.ok((id % 2 == 0) == PMZController.getInstance().hasBlacTurn(id)).build();
+        return Response.ok((id % 2 == 0) == PMZController.getInstance().hasBlackTurn(id)).build();
     }
 }
