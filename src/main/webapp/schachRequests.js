@@ -148,6 +148,10 @@ var makemoveOnline = function (position) {
         }
         return res.json();
     })
+        .then(function (gameBoardJSON) {
+        console.log(gameBoardJSON);
+        displayGameBoard(gameBoardJSON, []);
+    })
         .catch(function (err) {
         console.log(err);
     });

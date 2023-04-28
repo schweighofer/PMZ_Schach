@@ -167,6 +167,10 @@ const makemoveOnline = (position) =>{
             }
             return res.json();
         })
+        .then(gameBoardJSON => {
+            console.log(gameBoardJSON);
+            displayGameBoard(gameBoardJSON, []);
+        })
         .catch(err => {
             console.log(err);
         })
