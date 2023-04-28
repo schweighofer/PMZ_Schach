@@ -6,20 +6,19 @@ import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
 import java.util.List;
 
-import static at.kaindorf.pmz.bl.Game.DIVISOR_LINE_SIZE;
 import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
 
 /**
  * @Author Marcus Schweighofer
  * Created on 26.04.2023.
- * Class: Up.java
+ * Class: RightUp.java
  */
 
-public interface Up extends Moveable {
+public interface RightUp extends Moveable {
     @Override
     default void move(Piece piece, List<Integer> possibleMoves, int position) {
-        MutableInteger assumedPosition = new MutableInteger(position - LINE_SIZE);
-        if ((int)((assumedPosition.v() + LINE_SIZE) * DIVISOR_LINE_SIZE) > 0) {
+        MutableInteger assumedPosition = new MutableInteger(position - LINE_SIZE + 1);
+        if (((assumedPosition.v() + LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition.v() >= 0)) {
             piece.handleMove(assumedPosition, 0, possibleMoves);
         }
     }
