@@ -14,9 +14,6 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/chess")
 public class ChessResource {
-    // in zukunft list, map ?
-    // problem: das hier ist iwie nicht veränderbar, immutable oder so ein scheiß
-
     @GET
     @Path("/start")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -47,7 +44,7 @@ public class ChessResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response makeMove(@PathParam("id") Integer id, @QueryParam("target") Integer target) {
         if (PMZController.getInstance().makeMove(id, target)) {
-            return Response.accepted().build();
+            return Response.accepted(PMZController.getInstance().getBoard(id)).build();
         }
         return Response.notModified().build();
     }
