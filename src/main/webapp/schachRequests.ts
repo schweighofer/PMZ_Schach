@@ -71,7 +71,7 @@ const displayGameBoard = (gameBoardJSON, moveAbles) =>{
             reihe = reihe + 1;
         }
         if(Object.values(moveAbles).includes(value.position)){
-            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"planmoveOnline("+value.position+");\">";
+            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline("+value.position+");\">";
             console.log(value.position + " : " + moveAbles);
         }
         else if (((key % 2) != 0 && (reihe % 2) ==  0)||((key % 2) ==  0 && (reihe % 2) != 0)) {
@@ -151,5 +151,23 @@ const planmoveOnline = (position) => {
         .catch(err => {
             console.log(err);
 
+        })
+}
+const makemoveOnline = (position) =>{
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/`+GAMEID+`?target=`+position;
+    console.log(url);
+    const init = {
+        method: 'post'
+    }
+
+    fetch(url, init)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("POST REQUEST FAILED");
+            }
+            return res.json();
+        })
+        .catch(err => {
+            console.log(err);
         })
 }

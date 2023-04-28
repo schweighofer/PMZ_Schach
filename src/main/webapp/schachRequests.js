@@ -60,7 +60,7 @@ var displayGameBoard = function (gameBoardJSON, moveAbles) {
             reihe = reihe + 1;
         }
         if (Object.values(moveAbles).includes(value.position)) {
-            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
+            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
             console.log(value.position + " : " + moveAbles);
         }
         else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
@@ -130,6 +130,23 @@ var planmoveOnline = function (position) {
             .catch(function (err) {
             console.log(err);
         });
+    })
+        .catch(function (err) {
+        console.log(err);
+    });
+};
+var makemoveOnline = function (position) {
+    var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/" + GAMEID + "?target=" + position;
+    console.log(url);
+    var init = {
+        method: 'post'
+    };
+    fetch(url, init)
+        .then(function (res) {
+        if (!res.ok) {
+            throw new Error("POST REQUEST FAILED");
+        }
+        return res.json();
     })
         .catch(function (err) {
         console.log(err);
