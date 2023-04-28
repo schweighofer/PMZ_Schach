@@ -116,8 +116,9 @@ public class Game {
         if (!lastPossibleMoves.contains(desiredPosition)) {
             return false;
         }
+        Piece tmp = board.get(lastPiece);
         board.set(desiredPosition, board.get(lastPiece));
-        board.set(lastPiece, null);
+        board.set(lastPiece, tmp);
         return true;
     }
 
