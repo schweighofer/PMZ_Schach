@@ -37,31 +37,15 @@ const startGame = () => {
             // @ts-ignore
             const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
             GAMEID = gameID;
-            fetch(url)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error("GET REQUEST FAILED");
-                    }
-                    return res.json();
-                })
-                .then(gameBoardJSON => {
-                    displayGameBoard(gameBoardJSON, []);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            console.log("hallo1");
+            displayGameBoardRequest(url);
         })
         .catch(err => {
             console.log(err);
         });
 
-
-
-
-
 }
 const displayGameBoard = async (gameBoardJSON, moveAbles) => {
-
     //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
     var reihe: number = 1;
     var html: string = "";
@@ -104,19 +88,27 @@ const gameIDInputed = (): void => {
     console.log("your hash is: " + gameID);
     GAMEID = gameID;
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
-    fetch(url)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("GET REQUEST FAILED");
-            }
-            return res.json();
-        })
-        .then(gameBoardJSON => {
-            displayGameBoard(gameBoardJSON, []);
-        })
-        .catch(err => {
-            console.log(err);
-        })
+    displayGameBoardRequest(url);
+}
+const displayGameBoardRequest = (url): void =>{
+    console.log("hallo");
+    do{
+        console.log("bin drin");
+        fetch(url)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("GET REQUEST FAILED");
+                }
+                return res.json();
+            })
+            .then(gameBoardJSON => {
+                displayGameBoard(gameBoardJSON, []);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        console.log("bin unten drin" + !isOnTurn());
+    }while (!isOnTurn());
 }
 
 const planmoveOnline = (position) => {

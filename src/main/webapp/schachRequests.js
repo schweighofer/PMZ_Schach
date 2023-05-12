@@ -67,19 +67,8 @@ var startGame = function () {
         // @ts-ignore
         var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + gameID;
         GAMEID = gameID;
-        fetch(url)
-            .then(function (res) {
-            if (!res.ok) {
-                throw new Error("GET REQUEST FAILED");
-            }
-            return res.json();
-        })
-            .then(function (gameBoardJSON) {
-            displayGameBoard(gameBoardJSON, []);
-        })
-            .catch(function (err) {
-            console.log(err);
-        });
+        console.log("hallo1");
+        displayGameBoardRequest(url);
     })
         .catch(function (err) {
         console.log(err);
@@ -150,19 +139,27 @@ var gameIDInputed = function () {
     console.log("your hash is: " + gameID);
     GAMEID = gameID;
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + gameID;
-    fetch(url)
-        .then(function (res) {
-        if (!res.ok) {
-            throw new Error("GET REQUEST FAILED");
-        }
-        return res.json();
-    })
-        .then(function (gameBoardJSON) {
-        displayGameBoard(gameBoardJSON, []);
-    })
-        .catch(function (err) {
-        console.log(err);
-    });
+    displayGameBoardRequest(url);
+};
+var displayGameBoardRequest = function (url) {
+    console.log("hallo");
+    do {
+        console.log("bin drin");
+        fetch(url)
+            .then(function (res) {
+            if (!res.ok) {
+                throw new Error("GET REQUEST FAILED");
+            }
+            return res.json();
+        })
+            .then(function (gameBoardJSON) {
+            displayGameBoard(gameBoardJSON, []);
+        })
+            .catch(function (err) {
+            console.log(err);
+        });
+        console.log("bin unten drin" + !isOnTurn());
+    } while (!isOnTurn());
 };
 var planmoveOnline = function (position) {
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/" + GAMEID + "?position=" + position;
