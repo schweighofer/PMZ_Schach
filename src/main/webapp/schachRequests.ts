@@ -60,29 +60,27 @@ const startGame = () => {
 
 
 }
-const displayGameBoard = (gameBoardJSON, moveAbles) =>{
+const displayGameBoard = async (gameBoardJSON, moveAbles) => {
 
     //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
-    var reihe : number = 1;
-    var html : string = "";
+    var reihe: number = 1;
+    var html: string = "";
 
-    for(const [key, value] of Object.entries(gameBoardJSON)) {
-        if ((key % 8) ==  0) {
+    for (const [key, value] of Object.entries(gameBoardJSON)) {
+        if ((key % 8) == 0) {
             reihe = reihe + 1;
         }
-        if(Object.values(moveAbles).includes(value.position) && isOnTurn()){
-            console.log(isOnTurn());
-            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline("+value.position+");\">";
+        if (Object.values(moveAbles).includes(value.position) && await isOnTurn()) {
+            console.log(await isOnTurn());
+            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
             console.log(value.position + " : " + moveAbles);
-        }
-        else if (((key % 2) != 0 && (reihe % 2) ==  0)||((key % 2) ==  0 && (reihe % 2) != 0)) {
-            html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline("+value.position+");\">";
-        }
-        else {
-            html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline("+value.position+");\">";
+        } else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
+            html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
+        } else {
+            html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
         }
 
-        if ((parseInt(key) + 1) % 8 ==  0) {
+        if ((parseInt(key) + 1) % 8 == 0) {
             html += "<br>";
         }
         //console.log(html);
@@ -179,7 +177,5 @@ const makemoveOnline = (position) =>{
 const isOnTurn = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/turn/` + GAMEID;
     const response = await fetch(url);
-    var isOnTurn: boolean = await response.json();
-    console.log("ausgabe: " + isOnTurn);
-    return isOnTurn;
+    return await response.json();
 }

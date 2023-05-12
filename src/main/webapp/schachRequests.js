@@ -85,33 +85,58 @@ var startGame = function () {
         console.log(err);
     });
 };
-var displayGameBoard = function (gameBoardJSON, moveAbles) {
-    //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
-    var reihe = 1;
-    var html = "";
-    for (var _i = 0, _a = Object.entries(gameBoardJSON); _i < _a.length; _i++) {
-        var _b = _a[_i], key = _b[0], value = _b[1];
-        if ((key % 8) == 0) {
-            reihe = reihe + 1;
+var displayGameBoard = function (gameBoardJSON, moveAbles) { return __awaiter(_this, void 0, void 0, function () {
+    var reihe, html, _i, _a, _b, key, value, _c, _d, _e;
+    return __generator(this, function (_f) {
+        switch (_f.label) {
+            case 0:
+                reihe = 1;
+                html = "";
+                _i = 0, _a = Object.entries(gameBoardJSON);
+                _f.label = 1;
+            case 1:
+                if (!(_i < _a.length)) return [3 /*break*/, 8];
+                _b = _a[_i], key = _b[0], value = _b[1];
+                if ((key % 8) == 0) {
+                    reihe = reihe + 1;
+                }
+                _c = Object.values(moveAbles).includes(value.position);
+                if (!_c) return [3 /*break*/, 3];
+                return [4 /*yield*/, isOnTurn()];
+            case 2:
+                _c = (_f.sent());
+                _f.label = 3;
+            case 3:
+                if (!_c) return [3 /*break*/, 5];
+                _e = (_d = console).log;
+                return [4 /*yield*/, isOnTurn()];
+            case 4:
+                _e.apply(_d, [_f.sent()]);
+                html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
+                console.log(value.position + " : " + moveAbles);
+                return [3 /*break*/, 6];
+            case 5:
+                if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
+                    html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
+                }
+                else {
+                    html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
+                }
+                _f.label = 6;
+            case 6:
+                if ((parseInt(key) + 1) % 8 == 0) {
+                    html += "<br>";
+                }
+                //console.log(html);
+                document.getElementById("playingField").innerHTML = html;
+                _f.label = 7;
+            case 7:
+                _i++;
+                return [3 /*break*/, 1];
+            case 8: return [2 /*return*/];
         }
-        if (Object.values(moveAbles).includes(value.position) && isOnTurn()) {
-            console.log(isOnTurn());
-            html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
-            console.log(value.position + " : " + moveAbles);
-        }
-        else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
-            html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
-        }
-        else {
-            html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
-        }
-        if ((parseInt(key) + 1) % 8 == 0) {
-            html += "<br>";
-        }
-        //console.log(html);
-        document.getElementById("playingField").innerHTML = html;
-    }
-};
+    });
+}); };
 var joinGame = function () {
     document.getElementById("startGameButton").style.display = "none";
     document.getElementById("joinGameButton").style.display = "none";
@@ -193,7 +218,7 @@ var makemoveOnline = function (position) {
     });
 };
 var isOnTurn = function () { return __awaiter(_this, void 0, void 0, function () {
-    var url, response, isOnTurn;
+    var url, response;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -202,10 +227,7 @@ var isOnTurn = function () { return __awaiter(_this, void 0, void 0, function ()
             case 1:
                 response = _a.sent();
                 return [4 /*yield*/, response.json()];
-            case 2:
-                isOnTurn = _a.sent();
-                console.log("ausgabe: " + isOnTurn);
-                return [2 /*return*/, isOnTurn];
+            case 2: return [2 /*return*/, _a.sent()];
         }
     });
 }); };
