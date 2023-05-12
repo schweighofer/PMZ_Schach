@@ -32,9 +32,7 @@ const startGame = () => {
             return res.json();
         })
         .then(gameIDJSON => {
-            console.log(gameIDJSON);
             gameID = parseInt(gameIDJSON);
-            console.log(gameID);
             document.getElementById("gameID").innerHTML = "<p>your gameID is: "+gameID+"</p><p>the gameID toshare is:"+(gameID+1)+"</p>";
             // @ts-ignore
             const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
@@ -55,13 +53,15 @@ const startGame = () => {
         })
         .catch(err => {
             console.log(err);
-        })
+        });
+
 
 
 
 
 }
 const displayGameBoard = (gameBoardJSON, moveAbles) =>{
+
     //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
     var reihe : number = 1;
     var html : string = "";
@@ -70,7 +70,8 @@ const displayGameBoard = (gameBoardJSON, moveAbles) =>{
         if ((key % 8) ==  0) {
             reihe = reihe + 1;
         }
-        if(Object.values(moveAbles).includes(value.position)){
+        if(Object.values(moveAbles).includes(value.position) && isOnTurn()){
+            console.log(isOnTurn());
             html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline("+value.position+");\">";
             console.log(value.position + " : " + moveAbles);
         }
@@ -174,4 +175,11 @@ const makemoveOnline = (position) =>{
         .catch(err => {
             console.log(err);
         })
+}
+const isOnTurn = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/turn/` + GAMEID;
+    const response = await fetch(url);
+    var isOnTurn: boolean = await response.json();
+    console.log("ausgabe: " + isOnTurn);
+    return isOnTurn;
 }

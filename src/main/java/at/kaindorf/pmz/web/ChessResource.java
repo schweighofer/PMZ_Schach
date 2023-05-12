@@ -54,6 +54,6 @@ public class ChessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWhoIsTurn(@PathParam("id") Integer id) {
-        return Response.ok((id % 2 == 0) == PMZController.getInstance().hasBlacTurn(id)).build();
+        return Response.ok((id % 2 == 1) == PMZController.getInstance().hasBlacTurn(id)).build();
     }
 }
