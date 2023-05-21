@@ -54,23 +54,23 @@ const displayGameBoard = async (gameBoardJSON, moveAbles) => {
         if ((key % 8) == 0) {
             reihe = reihe + 1;
         }
+        console.log("2");
         if (Object.values(moveAbles).includes(value.position) && await isOnTurn()) {
-            console.log(await isOnTurn());
             html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
-            console.log(value.position + " : " + moveAbles);
         } else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
             html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
         } else {
             html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
         }
-
+        console.log("3");
         if ((parseInt(key) + 1) % 8 == 0) {
             html += "<br>";
         }
         //console.log(html);
         document.getElementById("playingField").innerHTML = html;
-
+        console.log("4");
     }
+    console.log("6");
 
 }
 const joinGame = () => {
@@ -90,25 +90,35 @@ const gameIDInputed = (): void => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
     displayGameBoardRequest(url);
 }
-const displayGameBoardRequest = (url): void =>{
+const displayGameBoardRequest = async (url): void => {
     console.log("hallo");
-    do{
+    var isBoardNotAktuell : boolean = true;
+    do {
         console.log("bin drin");
-        fetch(url)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error("GET REQUEST FAILED");
-                }
-                return res.json();
-            })
-            .then(gameBoardJSON => {
-                displayGameBoard(gameBoardJSON, []);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        console.log("bin unten drin" + !isOnTurn());
-    }while (!isOnTurn());
+        if(isBoardNotAktuell){
+            fetch(url)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error("GET REQUEST FAILED");
+                    }
+                    return res.json();
+                })
+                .then(gameBoardJSON => {
+                    console.log(1);
+                    displayGameBoard(gameBoardJSON, []);
+                    console.log(1 + "finished")
+                });
+            isBoardNotAktuell = false;
+        }
+        console.log("--------------------------trst" + (await isOnTurn()));
+        if(!(await isOnTurn())){
+            do{
+                console.log(("hallo bin in schleife"));
+            }while (!(await isOnTurn()));
+            isBoardNotAktuell = true;
+        }
+
+    } while ((await isOnTurn()));
 }
 
 const planmoveOnline = (position) => {
@@ -146,6 +156,7 @@ const planmoveOnline = (position) => {
 }
 const makemoveOnline = (position) =>{
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/`+GAMEID+`?target=`+position;
+    const urlGame: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
     console.log(url);
     const init = {
         method: 'post'
@@ -160,7 +171,7 @@ const makemoveOnline = (position) =>{
         })
         .then(gameBoardJSON => {
             console.log(gameBoardJSON);
-            displayGameBoard(gameBoardJSON, []);
+            displayGameBoardRequest(urlGame);
         })
         .catch(err => {
             console.log(err);

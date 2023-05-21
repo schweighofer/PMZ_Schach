@@ -75,54 +75,51 @@ var startGame = function () {
     });
 };
 var displayGameBoard = function (gameBoardJSON, moveAbles) { return __awaiter(_this, void 0, void 0, function () {
-    var reihe, html, _i, _a, _b, key, value, _c, _d, _e;
-    return __generator(this, function (_f) {
-        switch (_f.label) {
+    var reihe, html, _i, _a, _b, key, value, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 reihe = 1;
                 html = "";
                 _i = 0, _a = Object.entries(gameBoardJSON);
-                _f.label = 1;
+                _d.label = 1;
             case 1:
-                if (!(_i < _a.length)) return [3 /*break*/, 8];
+                if (!(_i < _a.length)) return [3 /*break*/, 5];
                 _b = _a[_i], key = _b[0], value = _b[1];
                 if ((key % 8) == 0) {
                     reihe = reihe + 1;
                 }
+                console.log("2");
                 _c = Object.values(moveAbles).includes(value.position);
                 if (!_c) return [3 /*break*/, 3];
                 return [4 /*yield*/, isOnTurn()];
             case 2:
-                _c = (_f.sent());
-                _f.label = 3;
+                _c = (_d.sent());
+                _d.label = 3;
             case 3:
-                if (!_c) return [3 /*break*/, 5];
-                _e = (_d = console).log;
-                return [4 /*yield*/, isOnTurn()];
-            case 4:
-                _e.apply(_d, [_f.sent()]);
-                html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
-                console.log(value.position + " : " + moveAbles);
-                return [3 /*break*/, 6];
-            case 5:
-                if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
+                if (_c) {
+                    html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
+                }
+                else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
                     html += "<input type=\"button\" class=\"blackField\" value=\"" + value.char + "\" class=\"blackField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
                 }
                 else {
                     html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
                 }
-                _f.label = 6;
-            case 6:
+                console.log("3");
                 if ((parseInt(key) + 1) % 8 == 0) {
                     html += "<br>";
                 }
                 //console.log(html);
                 document.getElementById("playingField").innerHTML = html;
-                _f.label = 7;
-            case 7:
+                console.log("4");
+                _d.label = 4;
+            case 4:
                 _i++;
                 return [3 /*break*/, 1];
-            case 8: return [2 /*return*/];
+            case 5:
+                console.log("6");
+                return [2 /*return*/];
         }
     });
 }); };
@@ -141,26 +138,58 @@ var gameIDInputed = function () {
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + gameID;
     displayGameBoardRequest(url);
 };
-var displayGameBoardRequest = function (url) {
-    console.log("hallo");
-    do {
-        console.log("bin drin");
-        fetch(url)
-            .then(function (res) {
-            if (!res.ok) {
-                throw new Error("GET REQUEST FAILED");
-            }
-            return res.json();
-        })
-            .then(function (gameBoardJSON) {
-            displayGameBoard(gameBoardJSON, []);
-        })
-            .catch(function (err) {
-            console.log(err);
-        });
-        console.log("bin unten drin" + !isOnTurn());
-    } while (!isOnTurn());
-};
+var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, void 0, function () {
+    var isBoardNotAktuell, _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                console.log("hallo");
+                isBoardNotAktuell = true;
+                _d.label = 1;
+            case 1:
+                console.log("bin drin");
+                if (isBoardNotAktuell) {
+                    fetch(url)
+                        .then(function (res) {
+                        if (!res.ok) {
+                            throw new Error("GET REQUEST FAILED");
+                        }
+                        return res.json();
+                    })
+                        .then(function (gameBoardJSON) {
+                        console.log(1);
+                        displayGameBoard(gameBoardJSON, []);
+                        console.log(1 + "finished");
+                    });
+                    isBoardNotAktuell = false;
+                }
+                _b = (_a = console).log;
+                _c = "--------------------------trst";
+                return [4 /*yield*/, isOnTurn()];
+            case 2:
+                _b.apply(_a, [_c + (_d.sent())]);
+                return [4 /*yield*/, isOnTurn()];
+            case 3:
+                if (!!(_d.sent())) return [3 /*break*/, 8];
+                _d.label = 4;
+            case 4:
+                console.log(("hallo bin in schleife"));
+                _d.label = 5;
+            case 5: return [4 /*yield*/, isOnTurn()];
+            case 6:
+                if (!(_d.sent())) return [3 /*break*/, 4];
+                _d.label = 7;
+            case 7:
+                isBoardNotAktuell = true;
+                _d.label = 8;
+            case 8: return [4 /*yield*/, isOnTurn()];
+            case 9:
+                if ((_d.sent())) return [3 /*break*/, 1];
+                _d.label = 10;
+            case 10: return [2 /*return*/];
+        }
+    });
+}); };
 var planmoveOnline = function (position) {
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/" + GAMEID + "?position=" + position;
     console.log(url);
@@ -195,6 +224,7 @@ var planmoveOnline = function (position) {
 };
 var makemoveOnline = function (position) {
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/" + GAMEID + "?target=" + position;
+    var urlGame = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + GAMEID;
     console.log(url);
     var init = {
         method: 'post'
@@ -208,7 +238,7 @@ var makemoveOnline = function (position) {
     })
         .then(function (gameBoardJSON) {
         console.log(gameBoardJSON);
-        displayGameBoard(gameBoardJSON, []);
+        displayGameBoardRequest(urlGame);
     })
         .catch(function (err) {
         console.log(err);
