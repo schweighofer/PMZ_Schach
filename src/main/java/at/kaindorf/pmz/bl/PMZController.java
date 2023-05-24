@@ -2,10 +2,7 @@ package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.chess.Piece;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
 
@@ -38,7 +35,10 @@ public class PMZController {
     public List<Piece> getBoard(Integer id) {
         List<Piece> board = games.get(id / 2 * 2).getBoard();
         if (id % 2 == 0) {
-            return turnBoard(board);
+            //return turnBoard(board);
+            List<Piece> turnedBoard = new ArrayList<>(board);
+            Collections.reverse(turnedBoard);
+            return turnedBoard;
         }
         return board;
     }

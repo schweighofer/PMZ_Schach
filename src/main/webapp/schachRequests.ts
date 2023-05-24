@@ -46,7 +46,6 @@ const startGame = () => {
 
 }
 const displayGameBoard = async (gameBoardJSON, moveAbles) => {
-    //todo: array als paramater hinzufügen. in diesem array sind ints von fields possiblemoves
     var reihe: number = 1;
     var html: string = "";
 
@@ -54,7 +53,7 @@ const displayGameBoard = async (gameBoardJSON, moveAbles) => {
         if ((key % 8) == 0) {
             reihe = reihe + 1;
         }
-        console.log("2");
+
         if (Object.values(moveAbles).includes(value.position) && await isOnTurn()) {
             html += "<input type=\"button\" class=\"greenField\" value=\"" + value.char + "\" class=\"greenField\" name=\"" + key + "\" onclick=\"makemoveOnline(" + value.position + ");\">";
         } else if (((key % 2) != 0 && (reihe % 2) == 0) || ((key % 2) == 0 && (reihe % 2) != 0)) {
@@ -62,15 +61,14 @@ const displayGameBoard = async (gameBoardJSON, moveAbles) => {
         } else {
             html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
         }
-        console.log("3");
         if ((parseInt(key) + 1) % 8 == 0) {
             html += "<br>";
         }
         //console.log(html);
         document.getElementById("playingField").innerHTML = html;
-        console.log("4");
+
     }
-    console.log("6");
+    
 
 }
 const joinGame = () => {
@@ -94,7 +92,6 @@ const displayGameBoardRequest = async (url): void => {
     console.log("hallo");
     var isBoardNotAktuell : boolean = true;
     do {
-        console.log("bin drin");
         if(isBoardNotAktuell){
             fetch(url)
                 .then(res => {
@@ -110,15 +107,13 @@ const displayGameBoardRequest = async (url): void => {
                 });
             isBoardNotAktuell = false;
         }
-        console.log("--------------------------trst" + (await isOnTurn()));
-        if(!(await isOnTurn())){
-            do{
-                console.log(("hallo bin in schleife"));
-            }while (!(await isOnTurn()));
+        if(!(await isOnTurn())){//&&!(await hasEnded())
+            do{}while (!(await isOnTurn()));
             isBoardNotAktuell = true;
         }
 
-    } while ((await isOnTurn()));
+    } while ((await isOnTurn())); //&&!(await hasEnded())
+    //getStatistics
 }
 
 const planmoveOnline = (position) => {

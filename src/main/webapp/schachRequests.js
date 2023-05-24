@@ -89,7 +89,6 @@ var displayGameBoard = function (gameBoardJSON, moveAbles) { return __awaiter(_t
                 if ((key % 8) == 0) {
                     reihe = reihe + 1;
                 }
-                console.log("2");
                 _c = Object.values(moveAbles).includes(value.position);
                 if (!_c) return [3 /*break*/, 3];
                 return [4 /*yield*/, isOnTurn()];
@@ -106,20 +105,16 @@ var displayGameBoard = function (gameBoardJSON, moveAbles) { return __awaiter(_t
                 else {
                     html += "<input type=\"button\" class=\"whiteField\" value=\"" + value.char + "\" class=\"whiteField\" name=\"" + key + "\" onclick=\"planmoveOnline(" + value.position + ");\">";
                 }
-                console.log("3");
                 if ((parseInt(key) + 1) % 8 == 0) {
                     html += "<br>";
                 }
                 //console.log(html);
                 document.getElementById("playingField").innerHTML = html;
-                console.log("4");
                 _d.label = 4;
             case 4:
                 _i++;
                 return [3 /*break*/, 1];
-            case 5:
-                console.log("6");
-                return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -139,15 +134,14 @@ var gameIDInputed = function () {
     displayGameBoardRequest(url);
 };
 var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, void 0, function () {
-    var isBoardNotAktuell, _a, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
+    var isBoardNotAktuell;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 console.log("hallo");
                 isBoardNotAktuell = true;
-                _d.label = 1;
+                _a.label = 1;
             case 1:
-                console.log("bin drin");
                 if (isBoardNotAktuell) {
                     fetch(url)
                         .then(function (res) {
@@ -163,30 +157,22 @@ var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, v
                     });
                     isBoardNotAktuell = false;
                 }
-                _b = (_a = console).log;
-                _c = "--------------------------trst";
                 return [4 /*yield*/, isOnTurn()];
             case 2:
-                _b.apply(_a, [_c + (_d.sent())]);
-                return [4 /*yield*/, isOnTurn()];
-            case 3:
-                if (!!(_d.sent())) return [3 /*break*/, 8];
-                _d.label = 4;
+                if (!!(_a.sent())) return [3 /*break*/, 6];
+                _a.label = 3;
+            case 3: return [4 /*yield*/, isOnTurn()];
             case 4:
-                console.log(("hallo bin in schleife"));
-                _d.label = 5;
-            case 5: return [4 /*yield*/, isOnTurn()];
-            case 6:
-                if (!(_d.sent())) return [3 /*break*/, 4];
-                _d.label = 7;
-            case 7:
+                if (!(_a.sent())) return [3 /*break*/, 3];
+                _a.label = 5;
+            case 5:
                 isBoardNotAktuell = true;
-                _d.label = 8;
-            case 8: return [4 /*yield*/, isOnTurn()];
-            case 9:
-                if ((_d.sent())) return [3 /*break*/, 1];
-                _d.label = 10;
-            case 10: return [2 /*return*/];
+                _a.label = 6;
+            case 6: return [4 /*yield*/, isOnTurn()];
+            case 7:
+                if ((_a.sent())) return [3 /*break*/, 1];
+                _a.label = 8;
+            case 8: return [2 /*return*/];
         }
     });
 }); };
