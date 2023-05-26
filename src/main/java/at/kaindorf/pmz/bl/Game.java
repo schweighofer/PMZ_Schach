@@ -26,7 +26,6 @@ public class Game {
     public static final Integer FIELD_SIZE = LINE_SIZE * LINE_SIZE;
 
     private boolean hasWhiteTurn = false;
-    private Boolean isWhiteCheck = null;
 
     private final List<Piece> board;
 
@@ -81,8 +80,6 @@ public class Game {
         board.add(new Bishop(  false,   this));
         board.add(new Knight(  false,   this));
         board.add(new Rook(    false,   this));
-
-
     }
 
     public int getPosition(Piece piece) {
@@ -104,7 +101,7 @@ public class Game {
     public List<Piece> getAllOtherPieces(Piece piece) {
         List<Piece> allOtherPieces = new ArrayList<>(board);
         return allOtherPieces.stream()
-                .filter(p -> p != null)
+                .filter(p -> !(p instanceof Empty))
                 .filter(p -> p.isBlack() != piece.isBlack())
                 .collect(Collectors.toList());
     }
@@ -123,14 +120,6 @@ public class Game {
         board.set(desiredPosition, board.get(lastPiece));
         board.set(lastPiece, new Empty(this));
         return true;
-    }
-
-    public Boolean getBlackCheck() {
-        return isWhiteCheck;
-    }
-
-    public void setBlackCheck(Boolean blackCheck) {
-        isWhiteCheck = blackCheck;
     }
 
     public List<Piece> getBoard() {
@@ -159,5 +148,25 @@ public class Game {
 
     public boolean isHasWhiteTurn() {
         return hasWhiteTurn;
+    }
+
+    // TODO: könig restrictions fertig machen, Pawn fixen den 2er sprung am anfange, check, und checkMate, nach den vier sachen fertig
+
+    public Boolean checkCheck() {
+        // all other pieces durchgehen (pawn aufpassen wegen schleagen) und schauen ob eins auf könig position ist
+        return null;
+    }
+
+    public Boolean checkCheckMate() {
+        // Muss vorher check sein
+        List<Piece> kings = board.stream()
+                .filter(p -> p instanceof King)
+                .collect(Collectors.toList());
+        for (Piece k : kings) {
+            if (k.obtainPossibleMoves().isEmpty()) {
+                return k.isBlack();
+            }
+        }
+        return null;
     }
 }

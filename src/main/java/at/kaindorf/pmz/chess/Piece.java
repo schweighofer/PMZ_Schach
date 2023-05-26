@@ -29,22 +29,12 @@ public abstract class Piece {
 
     // handles enemy pieces and only returns true if the piece is the enemy king
     public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
-        if ((fieldState == FieldState.BLACK) != isBlack) {
+        // PROBLEM: isBlack ist immer false?
+        if (fieldState == FieldState.BLACK_KING || fieldState == FieldState.WHITE_KING) {
+            return true;
+        } else if ((fieldState == FieldState.BLACK) != isBlack) {
             possibleMoves.add(currentPosition);
             return false;
-        }
-        return ((fieldState == FieldState.BLACK_KING) == isBlack);
-    }
-
-    protected boolean moves(int position, List<Integer> possibleMoves) {
-        Class<?>[] interfaces = this.getClass().getInterfaces();
-        for (Class<?> i : interfaces) {
-            try {
-                Method method = i.getDeclaredMethod("move", Piece.class, List.class, int.class);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-
         }
         return false;
     }

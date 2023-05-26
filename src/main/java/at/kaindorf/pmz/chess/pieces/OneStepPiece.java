@@ -30,14 +30,14 @@ public abstract class OneStepPiece extends Piece {
 
     @Override
     protected void pawn(List<Integer> possibleMoves, int position) {
-        int direction = (isBlack ? 1 : -1);
+        int direction = (game.getPiece(position).isBlack() ? 1 : -1);
         int assumedPosition = position + LINE_SIZE * direction;
         // Move
         if (assumedPosition >= 0 && assumedPosition < FIELD_SIZE) {
             FieldState fieldState = game.getFieldState(assumedPosition);
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
-                if (((int)(assumedPosition * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE * (isBlack ? -1 : 1)) == (isBlack ? LINE_SIZE : FIELD_SIZE - 2 * LINE_SIZE)) {
+                if (((int)(assumedPosition * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE * ((game.getPiece(position).isBlack() ? -1 : 1)) == (game.getPiece(position).isBlack() ? LINE_SIZE : FIELD_SIZE - 2 * LINE_SIZE))) {
                     possibleMoves.add(assumedPosition + LINE_SIZE * direction);
                 }
             }

@@ -6,7 +6,6 @@ import at.kaindorf.pmz.chess.pieces.OneStepPiece;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static at.kaindorf.pmz.chess.pieces.MoveType.*;
 
@@ -32,11 +31,18 @@ public class King extends OneStepPiece {
 
         List<Piece> allOtherPieces = game.getAllOtherPieces(this);
         for (Piece p : allOtherPieces) {
-            for (Integer i : p.obtainPossibleMoves().stream()
-                    .filter(k -> !k.equals(position))
-                    .collect(Collectors.toList())
-            ) {
-                possibleMoves.remove(i);
+            if (p instanceof King) {
+                List<Integer> kingMoves = new ArrayList<>();
+                moves(p.getPosition(), kingMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+                for (Integer i : kingMoves) {
+                    possibleMoves.remove(i);
+                }
+            } else if (p instanceof Pawn) {
+                // wenn Pawn noch implementieren :(
+            } else {
+                for (Integer i : p.obtainPossibleMoves()) {
+                    possibleMoves.remove(i);
+                }
             }
         }
 
