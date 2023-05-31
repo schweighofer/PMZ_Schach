@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static at.kaindorf.pmz.chess.pieces.MoveType.*;
+
 /**
  * @Author Marcus Schweighofer
  * Created on 24.03.2023.
@@ -100,10 +102,11 @@ public class Game {
 
     public List<Piece> getAllOtherPieces(Piece piece) {
         List<Piece> allOtherPieces = new ArrayList<>(board);
-        return allOtherPieces.stream()
+        allOtherPieces = allOtherPieces.stream()
                 .filter(p -> !(p instanceof Empty))
-                .filter(p -> p.isBlack() != piece.isBlack())
                 .collect(Collectors.toList());
+        allOtherPieces.removeIf(p -> p.isBlack() == piece.isBlack());
+        return allOtherPieces;
     }
 
     public List<Integer> getPossibleMoves(int piecePosition) {
@@ -150,11 +153,43 @@ public class Game {
         return hasWhiteTurn;
     }
 
-    // TODO: könig restrictions fertig machen, Pawn fixen den 2er sprung am anfange, check, und checkMate, nach den vier sachen fertig
+    // TODO: könig restrictions fertig machen, [Pawn fixen den 2er sprung am anfange], check, und checkMate, nach den vier sachen fertig
 
-    public Boolean checkCheck() {
-        // all other pieces durchgehen (pawn aufpassen wegen schleagen) und schauen ob eins auf könig position ist
-        return null;
+    public Boolean checkCheck(King king) {
+        return checkCheck(king, getPosition(king));
+    }
+
+    public Boolean checkCheck(King king, Integer hypothteicalPosition) {
+        List<Piece> allOtherPieces = getAllOtherPieces(king);
+        List<Integer> possibleEnemyMoves;
+        for (Piece p : allOtherPieces) {
+            // vallah der scheiß geht immer noch nicht aber ja
+            if (p instanceof Pawn) {
+                possibleEnemyMoves = new ArrayList<>();
+                int direction = (p.isBlack() ? 1 : -1);
+                // left
+                if ((getPosition(p) % LINE_SIZE != 0)) {
+                    int possibleMove = hypothteicalPosition + LINE_SIZE * direction - 1;
+                    possibleEnemyMoves.add(possibleMove);
+                }
+                // right
+                if ((getPosition(p) % LINE_SIZE != 7)) {
+                    int possibleMove = hypothteicalPosition + LINE_SIZE * direction + 1;
+                    possibleEnemyMoves.add(possibleMove);
+                }
+
+            } else if (p instanceof King) {
+                possibleEnemyMoves = new ArrayList<>();
+                p.moves(p.getPosition(), possibleEnemyMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+            } else {
+                possibleEnemyMoves = p.obtainPossibleMoves();
+            }
+
+            if (possibleEnemyMoves.contains(hypothteicalPosition)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Boolean checkCheckMate() {

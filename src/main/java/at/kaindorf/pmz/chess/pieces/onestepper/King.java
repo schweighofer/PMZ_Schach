@@ -1,7 +1,6 @@
 package at.kaindorf.pmz.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.chess.Piece;
 import at.kaindorf.pmz.chess.pieces.OneStepPiece;
 
 import java.util.ArrayList;
@@ -28,23 +27,11 @@ public class King extends OneStepPiece {
         moves(position, possibleMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
 
         // check if field is not blocked by other piece
+        // Problem: Pawn geht gar nicht, König kann schlagen auch wenn nicht gehen sollte
+        // Andere Idee: Festellen ob König schach ist, dann jeden move simulieren (?)
+        // ! Ja muss so
 
-        List<Piece> allOtherPieces = game.getAllOtherPieces(this);
-        for (Piece p : allOtherPieces) {
-            if (p instanceof King) {
-                List<Integer> kingMoves = new ArrayList<>();
-                moves(p.getPosition(), kingMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
-                for (Integer i : kingMoves) {
-                    possibleMoves.remove(i);
-                }
-            } else if (p instanceof Pawn) {
-                // wenn Pawn noch implementieren :(
-            } else {
-                for (Integer i : p.obtainPossibleMoves()) {
-                    possibleMoves.remove(i);
-                }
-            }
-        }
+        possibleMoves.removeIf(i -> game.checkCheck(this, i));
 
         return possibleMoves;
     }

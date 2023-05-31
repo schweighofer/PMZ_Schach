@@ -39,7 +39,7 @@ public abstract class Piece {
         return false;
     }
 
-    protected boolean moves(int position, List<Integer> possibleMoves, MoveType... types) {
+    public boolean moves(int position, List<Integer> possibleMoves, MoveType... types) {
         for (MoveType type : types) {
             try {
                 Method method = this.getClass().getSuperclass().getDeclaredMethod(type.name().toLowerCase(), List.class, int.class);
