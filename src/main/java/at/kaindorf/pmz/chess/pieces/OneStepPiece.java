@@ -38,7 +38,9 @@ public abstract class OneStepPiece extends Piece {
             if (fieldState == FieldState.NULL) {
                 possibleMoves.add(assumedPosition);
                 if (((int)(assumedPosition * DIVISOR_LINE_SIZE) * LINE_SIZE + LINE_SIZE * ((game.getPiece(position).isBlack() ? -1 : 1)) == (game.getPiece(position).isBlack() ? LINE_SIZE : FIELD_SIZE - 2 * LINE_SIZE))) {
-                    possibleMoves.add(assumedPosition + LINE_SIZE * direction);
+                    if (game.getFieldState(assumedPosition + LINE_SIZE * direction) == FieldState.NULL) {
+                        possibleMoves.add(assumedPosition + LINE_SIZE * direction);
+                    }
                 }
             }
         }
