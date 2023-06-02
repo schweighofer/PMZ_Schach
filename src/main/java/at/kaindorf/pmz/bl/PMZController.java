@@ -70,9 +70,10 @@ public class PMZController {
 
     public static void main(String[] args) {
         Game game = new Game();
+        //game.getBoard().set(11, new Rook(false, game));
+        System.out.println(game.checkCheck(true));
         game.printField();
-        System.out.println(game.getPossibleMoves(8));
-        System.out.println(game.getPossibleMoves(48));
+
     }
 
     public boolean isChess(Integer id, boolean forBlack) {

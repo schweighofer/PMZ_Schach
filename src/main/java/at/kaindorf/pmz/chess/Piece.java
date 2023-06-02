@@ -27,9 +27,7 @@ public abstract class Piece {
     // handles enemy pieces and only returns true if the piece is the enemy king
     public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
         // PROBLEM: isBlack ist immer false?
-        if (fieldState == FieldState.BLACK_KING || fieldState == FieldState.WHITE_KING) {
-            return true;
-        } else if ((fieldState == FieldState.BLACK) != isBlack) {
+        if ((fieldState == FieldState.BLACK || fieldState == FieldState.BLACK_KING) != isBlack) {
             possibleMoves.add(currentPosition);
             return false;
         }

@@ -81,6 +81,8 @@ public class Game {
         board.add(new Bishop(  false,   this));
         board.add(new Knight(  false,   this));
         board.add(new Rook(    false,   this));
+
+        board.set(12, new Rook(false, this));
     }
 
     public int getPosition(Piece piece) {
@@ -123,6 +125,10 @@ public class Game {
             }
             board.set(move, backup);
             board.set(piecePosition, toMove);
+
+            if (backup instanceof King) {
+                lastPossibleMoves.remove(move);
+            }
         }
 
         return lastPossibleMoves;
@@ -133,7 +139,6 @@ public class Game {
             return false;
         }
         hasWhiteTurn = !hasWhiteTurn;
-        Piece backup = board.get(desiredPosition);
         Piece toMove = board.get(lastPiece);
         board.set(desiredPosition, toMove);
         board.set(lastPiece, new Empty(this));
@@ -212,6 +217,9 @@ public class Game {
             } else {
                 possibleEnemyMoves = p.obtainPossibleMoves();
             }
+
+            System.out.println(board.indexOf(p) + " - " + possibleEnemyMoves);
+            System.out.println(hypothteicalPosition);
 
             if (possibleEnemyMoves.contains(hypothteicalPosition)) {
                 return true;
