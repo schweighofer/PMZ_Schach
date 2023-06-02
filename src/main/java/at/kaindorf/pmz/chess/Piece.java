@@ -1,12 +1,9 @@
 package at.kaindorf.pmz.chess;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.chess.pieces.MoveType;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 import jakarta.json.bind.annotation.JsonbTransient;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -39,19 +36,6 @@ public abstract class Piece {
         return false;
     }
 
-    public boolean moves(int position, List<Integer> possibleMoves, MoveType... types) {
-        for (MoveType type : types) {
-            try {
-                Method method = this.getClass().getSuperclass().getDeclaredMethod(type.name().toLowerCase(), List.class, int.class);
-                method.setAccessible(true);
-                method.invoke(this, possibleMoves, position);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return false;
-    }
-
     public boolean handleMove(MutableInteger assumedPosition, int step, List<Integer> possibleMoves) {
         FieldState fieldState = game.getFieldState(assumedPosition.v());
         if (fieldState == FieldState.NULL) {
@@ -64,16 +48,6 @@ public abstract class Piece {
         }
     }
 
-    protected abstract void left(List<Integer> possibleMoves, int position);
-    protected abstract void right(List<Integer> possibleMoves, int position);
-    protected abstract void up(List<Integer> possibleMoves, int position);
-    protected abstract void down(List<Integer> possibleMoves, int position);
-    protected abstract void left_up(List<Integer> possibleMoves, int position);
-    protected abstract void right_up(List<Integer> possibleMoves, int position);
-    protected abstract void left_down(List<Integer> possibleMoves, int position);
-    protected abstract void right_down(List<Integer> possibleMoves, int position);
-    protected abstract void pawn(List<Integer> possibleMoves, int position);
-    protected abstract void knight(List<Integer> possibleMoves, int position);
     @JsonbTransient
     public Boolean isBlack() {
         return isBlack;

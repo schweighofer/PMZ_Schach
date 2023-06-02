@@ -1,12 +1,15 @@
 package at.kaindorf.pmz.chess.pieces.morestepper;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.chess.pieces.MoreStepPiece;
+import at.kaindorf.pmz.chess.Piece;
+import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.kaindorf.pmz.chess.pieces.MoveType.*;
+import static at.kaindorf.pmz.bl.Game.FIELD_SIZE;
+import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
+
 
 /**
  * @Author Marcus Schweighofer
@@ -14,7 +17,7 @@ import static at.kaindorf.pmz.chess.pieces.MoveType.*;
  * Class: Bishop.java
  */
 
-public class Bishop extends MoreStepPiece {
+public class Bishop extends Piece {
     public Bishop(Boolean isBlack, Game game) {
         super(isBlack, game);
     }
@@ -24,7 +27,33 @@ public class Bishop extends MoreStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        moves(position, possibleMoves, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+        MutableInteger assumedPosition = new MutableInteger(position - LINE_SIZE - 1);
+        while (((assumedPosition.v() + LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition.v() >= 0)) {
+            if (handleMove(assumedPosition, -(LINE_SIZE + 1), possibleMoves)) {
+                break;
+            }
+        }
+
+        assumedPosition.v(position - LINE_SIZE + 1);
+        while (((assumedPosition.v() + LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition.v() >= 0)) {
+            if (handleMove(assumedPosition, -(LINE_SIZE - 1), possibleMoves)) {
+                break;
+            }
+        }
+
+        assumedPosition.v(position + LINE_SIZE - 1);
+        while (((assumedPosition.v() - LINE_SIZE + 1) % LINE_SIZE != 0) && (assumedPosition.v() < FIELD_SIZE)) {
+            if (handleMove(assumedPosition, LINE_SIZE - 1, possibleMoves)) {
+                break;
+            }
+        }
+
+        assumedPosition.v(position + LINE_SIZE + 1);
+        while (((assumedPosition.v() - LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition.v() < FIELD_SIZE)) {
+            if (handleMove(assumedPosition, LINE_SIZE + 1, possibleMoves)) {
+                break;
+            }
+        }
 
         return possibleMoves;
     }

@@ -1,12 +1,11 @@
 package at.kaindorf.pmz.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
-import at.kaindorf.pmz.chess.pieces.OneStepPiece;
+import at.kaindorf.pmz.chess.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.kaindorf.pmz.chess.pieces.MoveType.*;
 
 /**
  * @Author Marcus Schweighofer
@@ -14,7 +13,7 @@ import static at.kaindorf.pmz.chess.pieces.MoveType.*;
  * Class: King.java
  */
 
-public class King extends OneStepPiece {
+public class King extends Piece {
     public King(Boolean isBlack, Game game) {
         super(isBlack, game);
     }
@@ -24,7 +23,7 @@ public class King extends OneStepPiece {
         List<Integer> possibleMoves = new ArrayList<>();
         final int position = game.getPosition(this);
 
-        moves(position, possibleMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+
 
         // check if field is not blocked by other piece
         // Problem: Pawn geht gar nicht, König kann schlagen auch wenn nicht gehen sollte

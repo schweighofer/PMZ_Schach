@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static at.kaindorf.pmz.chess.pieces.MoveType.*;
 
 /**
  * @Author Marcus Schweighofer
@@ -180,7 +179,7 @@ public class Game {
 
             } else if (p instanceof King) {
                 possibleEnemyMoves = new ArrayList<>();
-                p.moves(p.getPosition(), possibleEnemyMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+                //p.moves(p.getPosition(), possibleEnemyMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
             } else {
                 possibleEnemyMoves = p.obtainPossibleMoves();
             }
