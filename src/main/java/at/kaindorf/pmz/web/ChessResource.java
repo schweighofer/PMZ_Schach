@@ -62,7 +62,7 @@ public class ChessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response isChess(@PathParam("id") Integer id) {
-        return Response.ok(PMZController.getInstance().isChess(id, id % 2 == 1)).build();
+        return Response.ok(PMZController.getInstance().isChess(id, id % 2 == 0)).build();
     }
 
     @GET

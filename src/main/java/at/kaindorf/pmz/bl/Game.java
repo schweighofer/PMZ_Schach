@@ -81,8 +81,6 @@ public class Game {
         board.add(new Bishop(  false,   this));
         board.add(new Knight(  false,   this));
         board.add(new Rook(    false,   this));
-
-        board.set(12, new Rook(false, this));
     }
 
     public int getPosition(Piece piece) {
