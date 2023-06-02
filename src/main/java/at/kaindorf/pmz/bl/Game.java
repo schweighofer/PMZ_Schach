@@ -111,6 +111,20 @@ public class Game {
     public List<Integer> getPossibleMoves(int piecePosition) {
         lastPiece = piecePosition;
         lastPossibleMoves = board.get(lastPiece).obtainPossibleMoves();
+
+        Piece toMove = board.get(piecePosition);
+
+        for (Integer move : lastPossibleMoves) {
+            Piece backup = board.get(move);
+            board.set(move, toMove);
+            board.set(piecePosition, new Empty(this));
+            if (checkCheck(toMove.isBlack())) {
+                lastPossibleMoves.remove(move);
+            }
+            board.set(move, backup);
+            board.set(piecePosition, toMove);
+        }
+
         return lastPossibleMoves;
     }
 
@@ -123,13 +137,6 @@ public class Game {
         Piece toMove = board.get(lastPiece);
         board.set(desiredPosition, toMove);
         board.set(lastPiece, new Empty(this));
-
-        if (checkCheck(toMove.isBlack())) {
-            board.set(lastPiece, toMove);
-            board.set(desiredPosition, backup);
-            hasWhiteTurn = !hasWhiteTurn;
-            return false;
-        }
 
         return true;
     }
