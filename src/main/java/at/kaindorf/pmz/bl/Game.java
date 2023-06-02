@@ -154,6 +154,15 @@ public class Game {
 
     // TODO: könig restrictions fertig machen, [Pawn fixen den 2er sprung am anfange], check, und checkMate, nach den vier sachen fertig
 
+    public Boolean checkCheck(boolean forBlack) {
+        King king = (King) board.stream()
+                .filter(p -> p instanceof King)
+                .filter(p -> p.isBlack() == forBlack)
+                .findFirst()
+                .get();
+        return checkCheck(king);
+    }
+
     public Boolean checkCheck(King king) {
         return checkCheck(king, getPosition(king));
     }
@@ -178,8 +187,7 @@ public class Game {
                 }
 
             } else if (p instanceof King) {
-                possibleEnemyMoves = new ArrayList<>();
-                //p.moves(p.getPosition(), possibleEnemyMoves, LEFT, RIGHT, DOWN, UP, LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN);
+                possibleEnemyMoves = ((King) p).obtainTheoreticalMoves();
             } else {
                 possibleEnemyMoves = p.obtainPossibleMoves();
             }
@@ -191,16 +199,18 @@ public class Game {
         return false;
     }
 
-    public Boolean checkCheckMate() {
+    public Boolean checkCheckMate(boolean forBlack) {
         // Muss vorher check sein
-        List<Piece> kings = board.stream()
+        King king = (King) board.stream()
                 .filter(p -> p instanceof King)
-                .collect(Collectors.toList());
-        for (Piece k : kings) {
-            if (k.obtainPossibleMoves().isEmpty()) {
-                return k.isBlack();
-            }
+                .filter(p -> p.isBlack() == forBlack)
+                .findFirst()
+                .get();
+
+        if (king.obtainPossibleMoves().isEmpty()) {
+            return true;
         }
-        return null;
+
+        return false;
     }
 }

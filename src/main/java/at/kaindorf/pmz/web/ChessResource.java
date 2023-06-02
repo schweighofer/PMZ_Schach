@@ -56,4 +56,20 @@ public class ChessResource {
     public Response getWhoIsTurn(@PathParam("id") Integer id) {
         return Response.ok((id % 2 == 1) == PMZController.getInstance().hasBlackTurn(id)).build();
     }
+
+    @GET
+    @Path("/isChess/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response isChess(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().isChess(id, id % 2 == 1)).build();
+    }
+
+    @GET
+    @Path("/isCheckmate/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response isCheckmate(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().isCheckmate(id, id % 2 == 1)).build();
+    }
 }

@@ -74,4 +74,12 @@ public class PMZController {
         System.out.println(game.getPossibleMoves(8));
         System.out.println(game.getPossibleMoves(48));
     }
+
+    public boolean isChess(Integer id, boolean forBlack) {
+        return games.get(id / 2 * 2).checkCheck(forBlack);
+    }
+
+    public boolean isCheckmate(Integer id, boolean forBlack) {
+        return games.get(id / 2 * 2).checkCheckMate(forBlack);
+    }
 }
