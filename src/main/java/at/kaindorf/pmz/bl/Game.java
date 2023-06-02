@@ -119,8 +119,17 @@ public class Game {
             return false;
         }
         hasWhiteTurn = !hasWhiteTurn;
-        board.set(desiredPosition, board.get(lastPiece));
+        Piece backup = board.get(desiredPosition);
+        Piece toMove = board.get(lastPiece);
+        board.set(desiredPosition, toMove);
         board.set(lastPiece, new Empty(this));
+
+        if (checkCheck(toMove.isBlack())) {
+            board.set(lastPiece, toMove);
+            board.set(desiredPosition, backup);
+            return false;
+        }
+
         return true;
     }
 
