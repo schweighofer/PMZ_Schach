@@ -134,13 +134,12 @@ var gameIDInputed = function () {
     displayGameBoardRequest(url);
 };
 var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, void 0, function () {
-    var isBoardNotAktuell;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var isBoardNotAktuell, _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
-                console.log("hallo");
                 isBoardNotAktuell = true;
-                _a.label = 1;
+                _d.label = 1;
             case 1:
                 if (isBoardNotAktuell) {
                     fetch(url)
@@ -151,28 +150,54 @@ var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, v
                         return res.json();
                     })
                         .then(function (gameBoardJSON) {
-                        console.log(1);
                         displayGameBoard(gameBoardJSON, []);
-                        console.log(1 + "finished");
                     });
                     isBoardNotAktuell = false;
                 }
                 return [4 /*yield*/, isOnTurn()];
             case 2:
-                if (!!(_a.sent())) return [3 /*break*/, 6];
-                _a.label = 3;
-            case 3: return [4 /*yield*/, isOnTurn()];
+                _a = !(_d.sent());
+                if (!_a) return [3 /*break*/, 4];
+                return [4 /*yield*/, hasEnded()];
+            case 3:
+                _a = !(_d.sent());
+                _d.label = 4;
             case 4:
-                if (!(_a.sent())) return [3 /*break*/, 3];
-                _a.label = 5;
-            case 5:
-                isBoardNotAktuell = true;
-                _a.label = 6;
-            case 6: return [4 /*yield*/, isOnTurn()];
+                if (!_a) return [3 /*break*/, 10];
+                _d.label = 5;
+            case 5: return [4 /*yield*/, isOnTurn()];
+            case 6:
+                _b = !(_d.sent());
+                if (!_b) return [3 /*break*/, 8];
+                return [4 /*yield*/, hasEnded()];
             case 7:
-                if ((_a.sent())) return [3 /*break*/, 1];
-                _a.label = 8;
-            case 8: return [2 /*return*/];
+                _b = !(_d.sent());
+                _d.label = 8;
+            case 8:
+                if (_b) return [3 /*break*/, 5];
+                _d.label = 9;
+            case 9:
+                isBoardNotAktuell = true;
+                _d.label = 10;
+            case 10: return [4 /*yield*/, isCheck()];
+            case 11:
+                if ((_d.sent())) {
+                    console.log("du bist im schach! :(");
+                    //todo: popup machen
+                }
+                _d.label = 12;
+            case 12: return [4 /*yield*/, isOnTurn()];
+            case 13:
+                _c = (_d.sent());
+                if (!_c) return [3 /*break*/, 15];
+                return [4 /*yield*/, hasEnded()];
+            case 14:
+                _c = !(_d.sent());
+                _d.label = 15;
+            case 15:
+                if (_c) return [3 /*break*/, 1];
+                _d.label = 16;
+            case 16: return [2 /*return*/];
         }
     });
 }); };
@@ -236,6 +261,48 @@ var isOnTurn = function () { return __awaiter(_this, void 0, void 0, function ()
         switch (_a.label) {
             case 0:
                 url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/turn/" + GAMEID;
+                return [4 /*yield*/, fetch(url)];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.json()];
+            case 2: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+var hasEnded = function () { return __awaiter(_this, void 0, void 0, function () {
+    var url, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/ended/" + GAMEID;
+                return [4 /*yield*/, fetch(url)];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.json()];
+            case 2: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+var isCheck = function () { return __awaiter(_this, void 0, void 0, function () {
+    var url, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/isChess/" + GAMEID;
+                return [4 /*yield*/, fetch(url)];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.json()];
+            case 2: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+var isCheckmate = function () { return __awaiter(_this, void 0, void 0, function () {
+    var url, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/isCheckmate/" + GAMEID;
                 return [4 /*yield*/, fetch(url)];
             case 1:
                 response = _a.sent();

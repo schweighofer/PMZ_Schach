@@ -89,7 +89,6 @@ const gameIDInputed = (): void => {
     displayGameBoardRequest(url);
 }
 const displayGameBoardRequest = async (url): void => {
-    console.log("hallo");
     var isBoardNotAktuell : boolean = true;
     do {
         if(isBoardNotAktuell){
@@ -101,19 +100,23 @@ const displayGameBoardRequest = async (url): void => {
                     return res.json();
                 })
                 .then(gameBoardJSON => {
-                    console.log(1);
                     displayGameBoard(gameBoardJSON, []);
-                    console.log(1 + "finished")
                 });
             isBoardNotAktuell = false;
         }
-        if(!(await isOnTurn())){//&&!(await hasEnded())
-            do{}while (!(await isOnTurn()));
+
+        if(!(await isOnTurn()) && !(await hasEnded())){
+            do{}while (!(await isOnTurn()) && !(await hasEnded()));
             isBoardNotAktuell = true;
         }
+        if((await isCheck())){
+            console.log("du bist im schach! :(");
+            //todo: popup machen
+        }
+    } while ((await isOnTurn()) && !(await hasEnded()));
 
-    } while ((await isOnTurn())); //&&!(await hasEnded())
-    //getStatistics
+    //if(isCheckmate)
+
 }
 
 const planmoveOnline = (position) => {
@@ -174,6 +177,24 @@ const makemoveOnline = (position) =>{
 }
 const isOnTurn = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/turn/` + GAMEID;
+    const response = await fetch(url);
+    return await response.json();
+}
+
+const hasEnded = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/ended/` + GAMEID;
+    const response = await fetch(url);
+    return await response.json();
+}
+
+const isCheck = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/isChess/` + GAMEID;
+    const response = await fetch(url);
+    return await response.json();
+}
+
+const isCheckmate = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/isCheckmate/` + GAMEID;
     const response = await fetch(url);
     return await response.json();
 }
