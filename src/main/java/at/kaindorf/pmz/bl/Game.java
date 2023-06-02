@@ -127,6 +127,7 @@ public class Game {
         if (checkCheck(toMove.isBlack())) {
             board.set(lastPiece, toMove);
             board.set(desiredPosition, backup);
+            hasWhiteTurn = !hasWhiteTurn;
             return false;
         }
 
