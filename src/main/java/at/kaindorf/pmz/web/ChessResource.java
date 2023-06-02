@@ -72,4 +72,12 @@ public class ChessResource {
     public Response isCheckmate(@PathParam("id") Integer id) {
         return Response.ok(PMZController.getInstance().isCheckmate(id, id % 2 == 1)).build();
     }
+
+    @GET
+    @Path("/ended/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hasEnded(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().hasEnded(id)).build();
+    }
 }

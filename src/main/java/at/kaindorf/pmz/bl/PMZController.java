@@ -82,4 +82,8 @@ public class PMZController {
     public boolean isCheckmate(Integer id, boolean forBlack) {
         return games.get(id / 2 * 2).checkCheckMate(forBlack);
     }
+
+    public boolean hasEnded(Integer id) {
+        return games.get(id / 2 * 2).hasEnded();
+    }
 }

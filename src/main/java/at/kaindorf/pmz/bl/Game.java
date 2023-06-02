@@ -154,6 +154,10 @@ public class Game {
 
     // TODO: könig restrictions fertig machen, [Pawn fixen den 2er sprung am anfange], check, und checkMate, nach den vier sachen fertig
 
+    public boolean hasEnded() {
+        return checkCheckMate(true) || checkCheckMate(false);
+    }
+
     public Boolean checkCheck(boolean forBlack) {
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
