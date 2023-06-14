@@ -240,4 +240,71 @@ public class Game {
 
         return false;
     }
+
+    //todo: boolean isLegalMove() function
+        //ALWAYS called before sending out possible moves of selected piece
+        //(deine move Validation dinger unnötig dann?)
+            /*
+                simulate the situation
+                    put the piece in the position via normal move function
+                    go through whole board
+                        filter for pieces of other color
+                            put allPossibleMoves of them in one list
+                    see if position of own king is in the list of allPossibleMoves
+                    implement function returnSimulationMove
+                        this function will move the Piece back to its prior position if it is an illegal move
+
+             */
+
+    //todo: boolean isCheckMate() function
+        //always called when you become onTurn
+        /*
+                go through all own pieces
+                    get all their possibleMoves that are also isLegalMove() == true
+                if there are no legal possibleMoves -> checkmate
+         */
+    //todo: boolean isCheck() function
+        //always called when you become onTurn
+        /*
+                go through whole board
+                        filter for pieces of other color
+                            put allPossibleMoves that are also isLegalMove() == true of them in one list
+                    if position of king is in the list of allPossibleMoves
+                        then is checkmate
+
+         */
+    //todo: or maybe just use a chess library (JChess as exp.)
+    //todo: time
+    /*
+                request for set max time
+                start blackTimer for white when black made their first move
+                start whiteTimer for black when white made their second move
+                when one time > max time that side has lost
+     */
+    //todo: transform pawn
+    /*
+                when pawn has reached backrow
+                automatically transform to queen
+                    (asking for choice to much work)
+     */
+    //todo: rochade
+    /*
+                in possibleMoves of King
+                    if king and rock have not moved and king is not in check and will not be put in check via rochade
+                        make them able to switch
+     */
+    //todo: enpassant
+    /*
+                in possibleMoves of pawn
+                    if pawn is in fifth row and an enemy pawn is beside you
+                    make pawn able to hit behind enemy pawn
+     */
+
+    //todo: implement stockfish (Piet Hein)
+    /*
+                find stockfish library
+                adapt board to stockfish library accepted board
+                get bestMove
+     */
+
 }
