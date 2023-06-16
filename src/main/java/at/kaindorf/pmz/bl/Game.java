@@ -112,7 +112,7 @@ public class Game {
         lastPiece = piecePosition;
         lastPossibleMoves = board.get(lastPiece).obtainPossibleMoves();
 
-        Piece toMove = board.get(piecePosition);
+        /*Piece toMove = board.get(piecePosition);
 
         for (Integer move : lastPossibleMoves) {
             Piece backup = board.get(move);
@@ -129,7 +129,8 @@ public class Game {
             }
         }
 
-        return lastPossibleMoves;
+        return lastPossibleMoves;*/
+        return legalMoves(board.get(lastPiece));
     }
 
     public boolean move(int desiredPosition) {
@@ -241,11 +242,41 @@ public class Game {
         return false;
     }
 
-    //todo: boolean isLegalMove() function
+    public List<Integer> legalMoves(Piece piece){
+        List<Integer> legalMoves = new ArrayList<>(); //list of legalMoves (not all possible are legal), gets filled in for loop
+        List<Integer> help = new ArrayList<>(lastPossibleMoves);
+        Integer outgoingPosition = piece.getPosition(); // Ausgangsposition des schlageneden piece
+        Piece killed; // Piece that could get killed
+        for(Integer moveToPosition : piece.obtainPossibleMoves()){ //loop through all possibleMoves of piece for checking if legal
+            killed = board.get(moveToPosition);
+            move(moveToPosition);
+            List<Piece> allOtherPieces = getAllOtherPieces(piece);
+            List<Integer> allMovesOfOtherPieces = new ArrayList<>();
+            allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
+
+            King king = (King) board.stream()
+                    .filter(p -> p instanceof King)
+                    .filter(p -> p.isBlack() == piece.isBlack())
+                    .findFirst()
+                    .get();
+            if(!allMovesOfOtherPieces.contains(king.getPosition())){//see if position of own king is in the list of allMovesOfOtherPieces
+                legalMoves.add(moveToPosition);
+            }
+            board.set(outgoingPosition, piece); //simulation rückgaängig machen
+            board.set(moveToPosition, killed);
+        }
+        lastPossibleMoves = help;
+        return legalMoves;
+    }
+
+    /*public boolean isCheckMate(boolean isBlack){
+
+    }*/
+    //todo: List<Integer> legalMoves() function
         //ALWAYS called before sending out possible moves of selected piece
         //(deine move Validation dinger unnötig dann?)
             /*
-                simulate the situation
+                loop through all possibleMoves of piece
                     put the piece in the position via normal move function
                     go through whole board
                         filter for pieces of other color
@@ -260,8 +291,8 @@ public class Game {
         //always called when you become onTurn
         /*
                 go through all own pieces
-                    get all their possibleMoves that are also isLegalMove() == true
-                if there are no legal possibleMoves -> checkmate
+                    get all their legalMoves
+                if there are no legalMoves -> checkmate
          */
     //todo: boolean isCheck() function
         //always called when you become onTurn
