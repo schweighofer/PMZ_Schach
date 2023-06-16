@@ -113,16 +113,19 @@ public class Game {
         lastPossibleMoves = board.get(lastPiece).obtainPossibleMoves();
 
         Piece toMove = board.get(piecePosition);
-
+        List<Piece> tryOutBoard = new ArrayList<>(board);
+        // TODO hier problem bei schach
+        // was hier passieren soll: jeder possible move soll ausprobiert werden, und wenn er zu einem schach führt nicht zulässig sein
+        // außerdem soll der könig nicht geschlagen werden dürfen
         for (Integer move : lastPossibleMoves) {
-            Piece backup = board.get(move);
-            board.set(move, toMove);
-            board.set(piecePosition, new Empty(this));
+            Piece backup = tryOutBoard.get(move);
+            tryOutBoard.set(move, toMove);
+            tryOutBoard.set(piecePosition, new Empty(this));
             if (checkCheck(toMove.isBlack())) {
                 lastPossibleMoves.remove(move);
             }
-            board.set(move, backup);
-            board.set(piecePosition, toMove);
+            tryOutBoard.set(move, backup);
+            tryOutBoard.set(piecePosition, toMove);
 
             if (backup instanceof King) {
                 lastPossibleMoves.remove(move);
