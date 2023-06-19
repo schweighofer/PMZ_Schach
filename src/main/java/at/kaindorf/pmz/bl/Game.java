@@ -11,7 +11,9 @@ import at.kaindorf.pmz.chess.pieces.onestepper.Knight;
 import at.kaindorf.pmz.chess.pieces.onestepper.Pawn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -40,23 +42,23 @@ public class Game {
 
     private void setupBoard() {
         // top row
-        board.add(new Rook(    true,    this));
-        board.add(new Knight(  true,    this));
-        board.add(new Bishop(  true,    this));
-        board.add(new Queen(   true,    this));
-        board.add(new King(    true,    this));
-        board.add(new Bishop(  true,    this));
-        board.add(new Knight(  true,    this));
-        board.add(new Rook(    true,    this));
+        board.add(new Rook(    true,    this, 0));
+        board.add(new Knight(  true,    this, 0));
+        board.add(new Bishop(  true,    this, 0));
+        board.add(new King(    true,    this, 0));
+        board.add(new Queen(   true,    this, 0));
+        board.add(new Bishop(  true,    this, 0));
+        board.add(new Knight(  true,    this, 0));
+        board.add(new Rook(    true,    this, 0));
 
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
-        board.add(new Pawn(    true,    this));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
+        board.add(new Pawn(    true,    this, 0));
 
         // null rows
         for (int i = 16; i < 48; i++) {
@@ -64,23 +66,24 @@ public class Game {
         }
 
         // bottom row
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
-        board.add(new Pawn(    false,   this));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
+        board.add(new Pawn(    false,   this, 0));
 
-        board.add(new Rook(    false,   this));
-        board.add(new Knight(  false,   this));
-        board.add(new Bishop(  false,   this));
-        board.add(new Queen(   false,   this));
-        board.add(new King(    false,   this));
-        board.add(new Bishop(  false,   this));
-        board.add(new Knight(  false,   this));
-        board.add(new Rook(    false,   this));
+        board.add(new Rook(    false,   this, 0));
+        board.add(new Knight(  false,   this, 0));
+        board.add(new Bishop(  false,   this, 0));
+        board.add(new King(    false,   this, 0));
+        board.add(new Queen(   false,   this, 0));
+        board.add(new Bishop(  false,   this, 0));
+        board.add(new Knight(  false,   this, 0));
+        board.add(new Rook(    false,   this, 0));
+
     }
 
     public int getPosition(Piece piece) {
@@ -92,7 +95,7 @@ public class Game {
             return FieldState.NULL;
         }
         Piece piece = board.get(index);
-        String fieldState = piece.isBlack() ? "BLACK" : "WHITE";
+        String fieldState = piece.isWhite() ? "BLACK" : "WHITE";
         if (piece instanceof King) {
             fieldState += "_KING";
         }
@@ -104,7 +107,29 @@ public class Game {
         allOtherPieces = allOtherPieces.stream()
                 .filter(p -> !(p instanceof Empty))
                 .collect(Collectors.toList());
-        allOtherPieces.removeIf(p -> p.isBlack() == piece.isBlack());
+        allOtherPieces.removeIf(p -> p.isWhite() == piece.isWhite());
+        return allOtherPieces;
+    }
+
+    public List<Piece> getAllOwnPiecesWithoutKing(Piece piece) {
+        return getAllOwnPiecesWithoutKing(piece.isWhite());
+    }
+
+    public List<Piece> getAllOwnPiecesWithoutKing(boolean color) {
+        List<Piece> allOtherPieces = new ArrayList<>(board);
+        allOtherPieces = allOtherPieces.stream()
+                .filter(p -> !(p instanceof Empty))
+                .collect(Collectors.toList());
+        allOtherPieces.removeIf(p -> p.isWhite() != color);
+        allOtherPieces.removeIf(p -> p instanceof King);
+        return allOtherPieces;
+    }
+    public List<Piece> getAllOwnPiecesWithKing(boolean color) {
+        List<Piece> allOtherPieces = new ArrayList<>(board);
+        allOtherPieces = allOtherPieces.stream()
+                .filter(p -> !(p instanceof Empty))
+                .collect(Collectors.toList());
+        allOtherPieces.removeIf(p -> p.isWhite() != color);
         return allOtherPieces;
     }
 
@@ -133,14 +158,177 @@ public class Game {
         return legalMoves(board.get(lastPiece));
     }
 
-    public boolean move(int desiredPosition) {
+    public Map<Integer, Piece> simMove(int desiredPosition) {
         if (!lastPossibleMoves.contains(desiredPosition)) {
-            return false;
+            return new HashMap<>();
         }
+        Piece toMove = board.get(lastPiece);
+
+        Map<Integer, Piece> history = new HashMap<>();
+        history.put(desiredPosition, board.get(desiredPosition));
+        history.put(toMove.getPosition(), toMove);
+        boolean specialMove = false;
+
+
+        //castle:
+        if(toMove instanceof King){
+            if(!toMove.isWhite() && !isCheck(!toMove.isWhite())){
+                //rochade rechts für schwarz:
+                if(desiredPosition == 61){
+                    if(toMove.getPosition() == 59 && board.get(63) instanceof Rook && board.get(63).getMoveCount() == 0){//schauen ob rook noch 0 gefahren ist und noch dort ist wo er sein soll
+                        if(board.get(62) instanceof Empty && board.get(61) instanceof Empty && board.get(60) instanceof Empty){//schauen ob dazwischen Frei
+                            history.put(59, toMove);
+                            history.put(63, board.get(63));
+                            history.put(60, new Empty(this));
+                            history.put(61, new Empty(this));
+                            history.put(62, new Empty(this));
+
+
+                            board.set(toMove.getPosition(), new Empty(this));
+                            board.set(61, toMove);
+                            board.set(60, board.get(63));
+                            board.set(63, new Empty(this));
+                            specialMove = true;
+                        }
+                    }
+                }
+
+                //rochade links für schwarz:
+                if(desiredPosition == 57){
+                    if(toMove.getPosition() == 59 && board.get(56) instanceof Rook && board.get(56).getMoveCount() == 0){
+                        if(board.get(57) instanceof Empty && board.get(58) instanceof Empty){//schauen ob dazwischen Frei
+                            history.put(59, toMove);
+                            history.put(56, board.get(56));
+                            history.put(57, new Empty(this));
+                            history.put(58, new Empty(this));
+
+                            board.set(toMove.getPosition(), new Empty(this));
+                            board.set(57, toMove);
+                            board.set(58, board.get(56));
+                            board.set(56, new Empty(this));
+                            specialMove = true;
+                        }
+                    }
+                }
+
+            }
+            if(toMove.isWhite() && !isCheck(toMove.isWhite())){
+                //rochade links für weiß:
+                if(desiredPosition == 1){
+                    if(toMove.getPosition() == 3 && board.get(0) instanceof Rook && board.get(0).getMoveCount() == 0){//schauen ob rook noch 0 gefahren ist und noch dort ist wo er sein soll
+                        if(board.get(1) instanceof Empty && board.get(2) instanceof Empty){//schauen ob dazwischen Frei
+                            history.put(3, toMove);
+                            history.put(0, board.get(0));
+                            history.put(1, new Empty(this));
+                            history.put(2, new Empty(this));
+
+                            board.set(toMove.getPosition(), new Empty(this));
+                            board.set(1, toMove);
+                            board.set(2, board.get(0));
+                            board.set(0, new Empty(this));
+                            specialMove = true;
+                        }
+                    }
+                }
+
+                //rochade rechts für weiß:
+                if(desiredPosition == 5){
+                    if(toMove.getPosition() == 3 && board.get(7) instanceof Rook && board.get(7).getMoveCount() == 0){
+                        if(board.get(6) instanceof Empty && board.get(5) instanceof Empty && board.get(4) instanceof Empty){//schauen ob dazwischen Frei
+                            history.put(3, toMove);
+                            history.put(7, board.get(7));
+                            history.put(4, new Empty(this));
+                            history.put(5, new Empty(this));
+                            history.put(6, new Empty(this));
+
+                            board.set(toMove.getPosition(), new Empty(this));
+                            board.set(5, toMove);
+                            board.set(4, board.get(7));
+                            board.set(7, new Empty(this));
+                            specialMove = true;
+                        }
+                    }
+                }
+
+            }
+        }
+        //pawn transformation:
+        if (toMove instanceof Pawn && ((!toMove.isWhite() && desiredPosition <= 7) || (toMove.isWhite() && desiredPosition >= 56))){//transformation of pawn to queen
+            specialMove = true;
+            board.set(toMove.getPosition(), new Empty(this));
+            board.set(desiredPosition, new Queen(toMove.isWhite(), this, 0));//automatically transform to queen because choice is too much work
+
+        }
+        //en passant:
+
+        if(toMove instanceof Pawn){
+            if(toMove.isWhite()){
+                if(toMove.getPosition() >= 33 && toMove.getPosition() <= 39){
+                    if(desiredPosition == toMove.getPosition()+7){
+                        if(board.get(toMove.getPosition()-1) instanceof Pawn && !board.get(toMove.getPosition()-1).isWhite() && board.get(toMove.getPosition()-1).getMoveCount() == 1 && board.get(toMove.getPosition()+7) instanceof Empty){
+                            history.put(toMove.getPosition() - 1, board.get(toMove.getPosition() - 1));
+                            board.set(toMove.getPosition() - 1, new Empty(this));
+                        }
+                    }
+
+                }
+                if(toMove.getPosition() >= 32 && toMove.getPosition() <= 38){
+                    if(desiredPosition == toMove.getPosition()+9){
+                        if(board.get(toMove.getPosition()+1) instanceof Pawn && !board.get(toMove.getPosition()+1).isWhite() && board.get(toMove.getPosition()+1).getMoveCount() == 1 && board.get(toMove.getPosition()+9) instanceof Empty){
+                            history.put(toMove.getPosition() + 1, board.get(toMove.getPosition() + 1));
+                            board.set(toMove.getPosition() + 1, new Empty(this));
+                        }
+                    }
+
+                }
+            }
+            if(!toMove.isWhite()){
+                if(toMove.getPosition() >= 25 && toMove.getPosition() <= 31){
+                    if(desiredPosition == toMove.getPosition()-9){
+                        if(board.get(toMove.getPosition()-1) instanceof Pawn && board.get(toMove.getPosition()-1).isWhite() && board.get(toMove.getPosition()-1).getMoveCount() == 1 && board.get(toMove.getPosition()-9) instanceof Empty){
+                            history.put(toMove.getPosition() - 1, board.get(toMove.getPosition() - 1));
+                            board.set(toMove.getPosition() - 1, new Empty(this));
+                        }
+                    }
+
+                }
+                if(toMove.getPosition() >= 24 && toMove.getPosition() <= 30){
+                    if(desiredPosition == toMove.getPosition()-7){
+                        if(board.get(toMove.getPosition()+1) instanceof Pawn && board.get(toMove.getPosition()+1).isWhite() && board.get(toMove.getPosition()+1).getMoveCount() == 1 && board.get(toMove.getPosition()-7) instanceof Empty){
+                            history.put(toMove.getPosition() + 1, board.get(toMove.getPosition() + 1));
+                            board.set(toMove.getPosition() + 1, new Empty(this));
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!specialMove){
+            board.set(desiredPosition, toMove);
+        }
+
+
+
+        board.set(lastPiece, new Empty(this));
+
+        return history;
+    }
+    public boolean move(int desiredPosition) {
+
         hasWhiteTurn = !hasWhiteTurn;
         Piece toMove = board.get(lastPiece);
-        board.set(desiredPosition, toMove);
-        board.set(lastPiece, new Empty(this));
+        simMove(desiredPosition);
+
+        /*DebugPiece debugPiece = new DebugPiece(false,this,0);
+        String debugText = (toMove.isWhite()) + "\n" +
+                "" + (board.get(toMove.getPosition()-1).isWhite()) + " " + (board.get(toMove.getPosition()+1).isWhite()) + "\n" +
+                "" + (board.get(toMove.getPosition()-1) instanceof Pawn) + " " + (board.get(toMove.getPosition()+1) instanceof Pawn) + "\n" +
+                "" +  (board.get(toMove.getPosition()-1).getMoveCount()) + " " + (board.get(toMove.getPosition()+1).getMoveCount()) + "\n";
+        debugPiece.setDebugText(debugText);
+        board.set(30, debugPiece);*/
+
+
+        toMove.setMoveCount(toMove.getMoveCount() + 1);
 
         return true;
     }
@@ -182,7 +370,7 @@ public class Game {
     public Boolean checkCheck(boolean forBlack) {
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
-                .filter(p -> p.isBlack() == forBlack)
+                .filter(p -> p.isWhite() == forBlack)
                 .findFirst()
                 .get();
         return checkCheck(king);
@@ -199,7 +387,7 @@ public class Game {
             // vallah der scheiß geht immer noch nicht aber ja
             if (p instanceof Pawn) {
                 possibleEnemyMoves = new ArrayList<>();
-                int direction = (p.isBlack() ? 1 : -1);
+                int direction = (p.isWhite() ? 1 : -1);
                 // left
                 if ((getPosition(p) % LINE_SIZE != 0)) {
                     int possibleMove = hypothteicalPosition + LINE_SIZE * direction - 1;
@@ -231,7 +419,7 @@ public class Game {
         // Muss vorher check sein
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
-                .filter(p -> p.isBlack() == forBlack)
+                .filter(p -> p.isWhite() == forBlack)
                 .findFirst()
                 .get();
 
@@ -245,67 +433,48 @@ public class Game {
     public List<Integer> legalMoves(Piece piece){
         List<Integer> legalMoves = new ArrayList<>(); //list of legalMoves (not all possible are legal), gets filled in for loop
         List<Integer> help = new ArrayList<>(lastPossibleMoves);
-        Integer outgoingPosition = piece.getPosition(); // Ausgangsposition des schlageneden piece
-        Piece killed; // Piece that could get killed
+        Map<Integer, Piece> history = new HashMap<>();
+        int initialPosition = piece.getPosition();
         for(Integer moveToPosition : piece.obtainPossibleMoves()){ //loop through all possibleMoves of piece for checking if legal
-            killed = board.get(moveToPosition);
-            move(moveToPosition);
+            history = simMove(moveToPosition);
             List<Piece> allOtherPieces = getAllOtherPieces(piece);
             List<Integer> allMovesOfOtherPieces = new ArrayList<>();
             allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
 
             King king = (King) board.stream()
                     .filter(p -> p instanceof King)
-                    .filter(p -> p.isBlack() == piece.isBlack())
+                    .filter(p -> p.isWhite() == piece.isWhite())
                     .findFirst()
                     .get();
             if(!allMovesOfOtherPieces.contains(king.getPosition())){//see if position of own king is in the list of allMovesOfOtherPieces
                 legalMoves.add(moveToPosition);
             }
-            board.set(outgoingPosition, piece); //simulation rückgaängig machen
-            board.set(moveToPosition, killed);
+            for(Integer positionOfKilled : history.keySet()){
+                if(positionOfKilled >= 0 && positionOfKilled <= 63){
+                    board.set(positionOfKilled, history.get(positionOfKilled));
+                }
+            }
+            //board.set(initialPosition, piece);
         }
         lastPossibleMoves = help;
         return legalMoves;
     }
 
-    /*public boolean isCheckMate(boolean isBlack){
+    public boolean isCheck(boolean isWhite){
+        List<Piece> allOtherPieces = getAllOwnPiecesWithoutKing(!isWhite); //getting all enemy pieces (getAllOwnPieces reversed)
+        List<Integer> allMovesOfOtherPieces = new ArrayList<>();
+        allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
 
-    }*/
-    //todo: List<Integer> legalMoves() function
-        //ALWAYS called before sending out possible moves of selected piece
-        //(deine move Validation dinger unnötig dann?)
-            /*
-                loop through all possibleMoves of piece
-                    put the piece in the position via normal move function
-                    go through whole board
-                        filter for pieces of other color
-                            put allPossibleMoves of them in one list
-                    see if position of own king is in the list of allPossibleMoves
-                    implement function returnSimulationMove
-                        this function will move the Piece back to its prior position if it is an illegal move
+        King king = (King) board.stream()//getKing for seeing if check
+                .filter(p -> p instanceof King)
+                .filter(p -> p.isWhite() == isWhite)
+                .findFirst()
+                .get();
 
-             */
+        return allMovesOfOtherPieces.contains(king.getPosition());
 
-    //todo: boolean isCheckMate() function
-        //always called when you become onTurn
-        /*
-                go through all own pieces
-                    get all their legalMoves
-                if there are no legalMoves -> checkmate
-         */
-    //todo: boolean isCheck() function
-        //always called when you become onTurn
-        /*
-                go through whole board
-                        filter for pieces of other color
-                            put allPossibleMoves that are also isLegalMove() == true of them in one list
-                    if position of king is in the list of allPossibleMoves
-                        then is checkmate
-
-         */
-    //todo: or maybe just use a chess library (JChess as exp.)
-    //todo: time
+    }
+   //todo: time
     /*
                 request for set max time
                 start blackTimer for white when black made their first move

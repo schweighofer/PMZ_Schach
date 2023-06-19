@@ -13,12 +13,22 @@ import java.util.List;
  */
 
 public abstract class Piece {
-    protected Boolean isBlack;
+    protected Boolean isWhite;
     protected Game game;
+    int moveCount;
 
-    public Piece(Boolean isBlack, Game game) {
-        this.isBlack = isBlack;
+    public Piece(Boolean isWhite, Game game , int moveCount) {
+        this.isWhite = isWhite;
         this.game = game;
+        this.moveCount = moveCount;
+    }
+
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    public void setMoveCount(int moveCount) {
+        this.moveCount = moveCount;
     }
 
     @JsonbTransient
@@ -27,7 +37,7 @@ public abstract class Piece {
     // handles enemy pieces and only returns true if the piece is the enemy king
     public boolean pieceAhead(List<Integer> possibleMoves, int currentPosition, FieldState fieldState) {
         // PROBLEM: isBlack ist immer false?
-        if ((fieldState == FieldState.BLACK || fieldState == FieldState.BLACK_KING) != isBlack) {
+        if ((fieldState == FieldState.BLACK || fieldState == FieldState.BLACK_KING) != isWhite) {
             possibleMoves.add(currentPosition);
             return false;
         }
@@ -47,8 +57,8 @@ public abstract class Piece {
     }
 
     @JsonbTransient
-    public Boolean isBlack() {
-        return isBlack;
+    public Boolean isWhite() {
+        return isWhite;
     }
 
     public Integer getPosition() {

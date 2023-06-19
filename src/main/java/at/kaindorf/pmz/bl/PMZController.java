@@ -54,7 +54,7 @@ public class PMZController {
     }
 
     public List<Integer> getPossibleMoves(Integer id, Integer position) {
-        if ((id % 2 == 0) == (games.get(id / 2 * 2).getPiece(position).isBlack())) {
+        if ((id % 2 == 0) == (games.get(id / 2 * 2).getPiece(position).isWhite())) {
             return games.get(id / 2 * 2).getPossibleMoves(position);
         }
         return new ArrayList<Integer>();

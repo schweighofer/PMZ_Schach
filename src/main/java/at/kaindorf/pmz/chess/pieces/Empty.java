@@ -14,7 +14,7 @@ import java.util.List;
 public class Empty extends Piece {
 
     public Empty(Game game) {
-        super(true, game);
+        super(true, game, 0);
     }
 
     @Override

@@ -31,6 +31,6 @@ public class PieceMap {
     }
 
     public static Character get(Piece piece) {
-        return (char)(pieceMap.get(piece.getClass()).charValue() - 6 * Boolean.compare(piece.isBlack(), true));
+        return (char)(pieceMap.get(piece.getClass()).charValue() - 6 * Boolean.compare(piece.isWhite(), true));
     }
 }

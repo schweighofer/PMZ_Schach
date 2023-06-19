@@ -17,8 +17,8 @@ import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
  */
 
 public class Knight extends Piece {
-    public Knight(Boolean isBlack, Game game) {
-        super(isBlack, game);
+    public Knight(Boolean isBlack, Game game, int moveCount) {
+        super(isBlack, game, moveCount);
     }
 
     @Override

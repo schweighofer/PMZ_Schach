@@ -18,8 +18,8 @@ import static at.kaindorf.pmz.bl.Game.LINE_SIZE;
  */
 
 public class Bishop extends Piece {
-    public Bishop(Boolean isBlack, Game game) {
-        super(isBlack, game);
+    public Bishop(Boolean isBlack, Game game, int moveCount) {
+        super(isBlack, game, moveCount);
     }
 
     @Override

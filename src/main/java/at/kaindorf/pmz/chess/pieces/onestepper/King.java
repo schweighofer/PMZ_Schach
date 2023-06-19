@@ -2,6 +2,8 @@ package at.kaindorf.pmz.chess.pieces.onestepper;
 
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.chess.Piece;
+import at.kaindorf.pmz.chess.pieces.Empty;
+import at.kaindorf.pmz.chess.pieces.morestepper.Rook;
 import at.kaindorf.pmz.pojos.logic.MutableInteger;
 
 import java.util.ArrayList;
@@ -17,8 +19,8 @@ import static at.kaindorf.pmz.bl.Game.*;
  */
 
 public class King extends Piece {
-    public King(Boolean isBlack, Game game) {
-        super(isBlack, game);
+    public King(Boolean isWhite, Game game, int moveCount) {
+        super(isWhite, game, moveCount);
     }
 
     @Override
@@ -80,6 +82,39 @@ public class King extends Piece {
         assumedPosition.v(position + LINE_SIZE + 1);
         if (((assumedPosition.v() - LINE_SIZE - 1) % LINE_SIZE != LINE_SIZE - 1) && (assumedPosition.v() < FIELD_SIZE)) {
             handleMove(assumedPosition, LINE_SIZE + 1, possibleMoves);
+        }
+
+        //rochade:
+        if(getMoveCount() == 0){
+
+            if(!isWhite && !game.isCheck(!isWhite)){
+                //rochade rechts für schwarz:
+                if(getPosition() == 59 && game.getBoard().get(63) instanceof Rook && game.getBoard().get(63).getMoveCount() == 0){//schauen ob rook noch 0 gefahren ist und noch dort ist wo er sein soll
+                    if(game.getBoard().get(62) instanceof Empty && game.getBoard().get(61) instanceof Empty && game.getBoard().get(60) instanceof Empty){//schauen ob dazwischen Frei
+                        possibleMoves.add(61);
+                    }
+                }
+                //rochade links für schwarz:
+                if(getPosition() == 59 && game.getBoard().get(56) instanceof Rook && game.getBoard().get(56).getMoveCount() == 0){
+                    if(game.getBoard().get(57) instanceof Empty && game.getBoard().get(58) instanceof Empty){//schauen ob dazwischen Frei
+                        possibleMoves.add(57);
+                    }
+                }
+            }
+            if(isWhite && !game.isCheck(isWhite)){
+                //rochade links für weiß:
+                if(getPosition() == 3 && game.getBoard().get(0) instanceof Rook && game.getBoard().get(0).getMoveCount() == 0){//schauen ob rook noch 0 gefahren ist und noch dort ist wo er sein soll
+                    if(game.getBoard().get(1) instanceof Empty && game.getBoard().get(2) instanceof Empty){//schauen ob dazwischen Frei
+                        possibleMoves.add(1);
+                    }
+                }
+                //rochade rechts für weiß:
+                if(getPosition() == 3 && game.getBoard().get(7) instanceof Rook && game.getBoard().get(7).getMoveCount() == 0){
+                    if(game.getBoard().get(6) instanceof Empty && game.getBoard().get(5) instanceof Empty && game.getBoard().get(4) instanceof Empty){//schauen ob dazwischen Frei
+                        possibleMoves.add(5);
+                    }
+                }
+            }
         }
 
         return possibleMoves;
