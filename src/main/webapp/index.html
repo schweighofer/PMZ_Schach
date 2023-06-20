@@ -983,6 +983,11 @@
             bottom: 0%; /* Adjust the top position to create a 40% gap */
             height: 30%;
         }
+        #giveUpButton {
+            padding-left: 20%;
+            height: 5%;
+            width: 80%;
+        }
 
     </style>
     <script src="schachRequests.js"></script>
@@ -1034,7 +1039,10 @@
             <div class="column right-column">
                 <img src="pictores/PMZ-Schach-LOGO.png" alt="Responsive Image">
                 <div id="giveUpButton">
-                    debug
+                    <button onclick="giveUpHelp();">
+                        <img src="pictores/giveUp.png" alt="Give Up" style="width: 100%; height: 5%;">
+                    </button>
+
                 </div>
             </div>
         </div>

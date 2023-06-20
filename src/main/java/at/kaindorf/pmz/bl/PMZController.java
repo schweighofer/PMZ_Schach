@@ -69,6 +69,13 @@ public class PMZController {
     public boolean hasBlackTurn(Integer id) {
         return games.get(id / 2 * 2).isHasWhiteTurn();
     }
+    public boolean giveUp(Integer id) {
+        if(id % 2 == 0){
+            return games.get(id / 2 * 2).setHasWhiteGivenUp();
+        }
+        return games.get(id / 2 * 2).setHasBlackGivenUp();
+
+    }
 
     public static void main(String[] args) {
         Game game = new Game(99999);
@@ -103,18 +110,24 @@ public class PMZController {
     }
 
     public String getStats(Integer id) {
-        Game game = games.get(id);
-        if (game.isPatt()) {
+        Game game = games.get(id / 2 * 2);
+        if (game.isCheckMate(false)) {
+            return "White won thorugh checkmate";
+        }else if (game.isCheckMate(true)) { // hier bei den 2 weiß ich nicht steht so im LW, kann auch andersrum sein
+            return "Black won through checkmate";
+        } else if (game.isPatt()) {
             return "Draw";
-        } else if (game.isCheckMate(true)) { // hier bei den 2 weiß ich nicht steht so im LW, kann auch andersrum sein
-            return "White won through checkmate";
-        } else if (game.isCheckMate(false)) {
-            return "Black won thorugh checkmate";
         } else if (game.getHasTimeEnded(0)) { // 0 --> white
             return "Black won through time";
         } else if (game.getHasTimeEnded(1)) { // 1 --> black
             return "White won through time";
         }
-        return "noone won this should not happen";
+        else if (game.isHasBlackGivenUp()) { // 1 --> black
+            return "White won through Aufgabe von Black";
+        }
+        else if (game.isHasWhiteGivenUp()) { // 1 --> black
+            return "Black won through Aufgabe von Black";
+        }
+        return "something happened and game is finished. thank you";
     }
 }

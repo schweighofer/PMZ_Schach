@@ -20,12 +20,8 @@ const multiplayer = () => {
 const nameInputed = (): void => {
     OWN_NAME = (document.getElementById("name") as HTMLInputElement).value;
     console.log("your name is: " + OWN_NAME);
-
-    while(!(OWN_NAME.length > 0)){
-        document.getElementById("popup").innerHTML = "<h2>Enter Your Name(>0)</h2>\n" +
-            "        <input type=\"text\" id=\"name\" placeholder=\"Your Name\">\n" +
-            "        <button id=\"close-btn\" onclick=\"nameInputed();\">Enter</button>";
-        OWN_NAME = (document.getElementById("name") as HTMLInputElement).value;
+    if(OWN_NAME == null){
+        OWN_NAME = "Piet :(";
     }
     document.getElementById("overlay").style.display = "none";
 }
@@ -99,17 +95,6 @@ const gameIDInputed = async (): void => {
 const startAsWhite = async () : void => {
     const timeInput = (document.getElementById("time") as HTMLInputElement).value;
     MAX_TIME = parseInt(timeInput);
-    console.log("1"+MAX_TIME);
-    console.log("2"+timeInput);
-    console.log("3"+document.getElementById("time"));
-    while(MAX_TIME < 60){
-        document.getElementById("popup").innerHTML = "<a>Enter Time(>=60):</a>\n" +
-            "            <input type=\"text\" id=\"time\">\n" + "</br>"
-        "            <button id=\"startAsWhite\" onclick=\"startAsWhite();\">als Weiß starten</button>"+
-        "            <button id=\"startAsBlack\" onclick=\"startAsBlack();\">als Schwarz auf Weißen warten</button>";
-        const timeInput = document.getElementById("time") as HTMLInputElement;
-        MAX_TIME = parseInt(timeInput.value);
-    }
     // @ts-ignore
     GAMEID = await startGame();
     ENEMY_GAMEID = parseInt(GAMEID) + 1;
@@ -121,17 +106,6 @@ const startAsWhite = async () : void => {
 const startAsBlack = async () : void => {
     const timeInput = (document.getElementById("time") as HTMLInputElement).value;
     MAX_TIME = parseInt(timeInput);
-    console.log("1"+MAX_TIME);
-    console.log("2"+timeInput);
-    console.log("3"+document.getElementById("time"));
-    while(MAX_TIME < 60){
-        document.getElementById("popup").innerHTML = "<a>Enter Time(>=60):</a>\n" +
-            "            <input type=\"text\" id=\"time\">\n" + "</br>"
-        "            <button id=\"startAsWhite\" onclick=\"startAsWhite();\">als Weiß starten</button>"+
-        "            <button id=\"startAsBlack\" onclick=\"startAsBlack();\">als Schwarz auf Weißen warten</button>";
-        const timeInput = document.getElementById("time") as HTMLInputElement;
-        MAX_TIME = parseInt(timeInput.value);
-    }
     ENEMY_GAMEID = await startGame();
     GAMEID = parseInt(ENEMY_GAMEID) + 1;
     console.log("ugabugaranpararf::"+GAMEID);
@@ -154,9 +128,13 @@ const displayGameBoardRequest = async (url): void => {
     while (!(await hasEnemyJoined())){
         document.getElementById("overlay").style.display = "block";
         document.getElementById("popup").innerHTML = "<h1>GEGNER IST NOCH NICHT GEJOINED</h1><a>seine GameID wäre:" + ENEMY_GAMEID + "</a>";
-        console.log(await getEnemyName(GAMEID) + ":::" + await getEnemyName(ENEMY_GAMEID));
-        console.log(GAMEID + ":::" + ENEMY_GAMEID);
     }
+    document.getElementById("ownField").innerHTML = "<h1>" + OWN_NAME + " : " + (await getOwnTime()) + "</h1>";
+    document.getElementById("ownField").style.color = "white";
+
+    document.getElementById("enemyField").innerHTML = "<h1>" + (await getEnemyName(GAMEID)) + " : " + (await getEnemyTime()) + "</h1>";
+    document.getElementById("enemyField").style.color = "white";
+
     document.getElementById("overlay").style.display = "none";
     if(!(await hasEnded())) {
         do {
@@ -190,7 +168,8 @@ const displayGameBoardRequest = async (url): void => {
         } while ((await isOnTurn()) && !(await hasEnded()));
     }
 
-    console.log("uga buga bin draußen und spiel is vorbei");
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").innerHTML = "<h1>SPIEL IST VORBEI</h1><a>"+await getStats()+"</a>";
     fetch(url)
         .then(res => {
             if (!res.ok) {
@@ -201,7 +180,8 @@ const displayGameBoardRequest = async (url): void => {
         .then(gameBoardJSON => {
             displayGameBoard(gameBoardJSON, []);
         });
-    //todo: getStats()
+
+
 
 }
 
@@ -278,7 +258,6 @@ const isOnTurn = async () => {
 const hasEnded = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/ended/` + GAMEID;
     const response = await fetch(url);
-    console.log("203");
     return await response.json();
 }
 
@@ -290,14 +269,12 @@ const isCheck = async () => {
 
 const setOwnName = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/setName/` + GAMEID + '?name=' + OWN_NAME;
-    console.log("215::::"+OWN_NAME);
     console.log(`http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/setName/` + GAMEID + '?name=' + OWN_NAME);
     const response = await fetch(url);
     return response.json();
 }
 const getEnemyName = async (gameID : number) => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getEnemyName/` + gameID ;
-    console.log("220");
     return fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -312,25 +289,31 @@ const getEnemyName = async (gameID : number) => {
 const getOwnTime = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getOwnTime/` + GAMEID ;
     const response = await fetch(url);
-    console.log("227");
     return await response.json();
 }
 const getEnemyTime = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getEnemyTime/` + GAMEID ;
     const response = await fetch(url);
-    console.log("233");
     return await response.json();
 }
+
 const getStats = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getStats/` + GAMEID ;
-    const response = await fetch(url);
-
-    return await response.json();
+    console.log("220");
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch stats');
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data as string;
+        });
 }
 const getGameID = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start?time=`+MAX_TIME+"";
     const response = await fetch(url);
-    console.log("245");
     return await response.json();
 }
 const hasEnemyJoined = async () => {
@@ -338,5 +321,15 @@ const hasEnemyJoined = async () => {
     const response = await fetch(url);
     return await response.json();
 }
+const giveUp = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/giveUp/` + GAMEID;
+    const response = await fetch(url);
+    console.log(GAMEID + "is giving up");
+    return await response.json();
+}
+const giveUpHelp = async () => {
+    await giveUp();
+}
 
 
+//todo: namen und zeit verschönern und debug verschwinden lassen

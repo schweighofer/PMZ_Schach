@@ -122,7 +122,7 @@ public class ChessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStats(@PathParam("id") Integer id) {
-        return Response.ok(PMZController.getInstance().getStats(id)).build();
+        return Response.ok("\""+PMZController.getInstance().getStats(id)+"\"",MediaType.APPLICATION_JSON).build();
     }
 
     @GET
@@ -132,4 +132,12 @@ public class ChessResource {
     public Response hasEnemyJoined(@PathParam("id") Integer id) {
         return Response.ok(PMZController.getInstance().getName((id % 2 == 0 ? id + 1 : id - 1)) != null).build();
     }
+    @GET
+    @Path("/giveUp/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response giveUp(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().giveUp(id)).build();
+    }
+
 }
