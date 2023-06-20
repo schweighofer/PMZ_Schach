@@ -355,7 +355,6 @@ public class Game {
     }
 
 
-    //todo: problem that white and black access function at same time and move pieces wrongly around?
     private boolean isHasEndedInUse = false;
 
     public synchronized boolean hasEnded() {
@@ -522,24 +521,6 @@ public class Game {
                 start blackTimer for white when black made their first move
                 start whiteTimer for black when white made their second move
                 when one time > max time that side has lost
-     */
-    //todo: transform pawn
-    /*
-                when pawn has reached backrow
-                automatically transform to queen
-                    (asking for choice to much work)
-     */
-    //todo: rochade
-    /*
-                in possibleMoves of King
-                    if king and rock have not moved and king is not in check and will not be put in check via rochade
-                        make them able to switch
-     */
-    //todo: enpassant
-    /*
-                in possibleMoves of pawn
-                    if pawn is in fifth row and an enemy pawn is beside you
-                    make pawn able to hit behind enemy pawn
      */
 
     //todo: implement stockfish (Piet Hein)
