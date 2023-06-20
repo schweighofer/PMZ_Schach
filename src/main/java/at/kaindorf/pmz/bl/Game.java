@@ -1,4 +1,4 @@
-﻿package at.kaindorf.pmz.bl;
+package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.chess.FieldState;
 import at.kaindorf.pmz.chess.Piece;
@@ -156,7 +156,7 @@ public class Game {
         return legalMoves(lastPiece);
     }
 
-    public synchronized Map<Integer, Piece> simMove(int desiredPosition, int lastPiece) {
+    public Map<Integer, Piece> simMove(int desiredPosition, int lastPiece) {
         Piece toMove = board.get(lastPiece);
 
         Map<Integer, Piece> history = new HashMap<>();
@@ -305,7 +305,7 @@ public class Game {
 
         return history;
     }
-    public synchronized boolean move(int desiredPosition, int lastPiece) {
+    public boolean move(int desiredPosition, int lastPiece) {
 
         hasWhiteTurn = !hasWhiteTurn;
         globalMoveCount++;
@@ -326,13 +326,13 @@ public class Game {
         return true;
     }
 
-    public synchronized List<Piece> getBoard() {
+    public List<Piece> getBoard() {
         return new ArrayList<>(this.board);
     }
 
     // DEBUG
 
-    public synchronized void printField() {
+    public void printField() {
         for (int i = 0; i < LINE_SIZE; i++) {
             for (int j = 0; j < LINE_SIZE; j++) {
                 if (board.get(i * LINE_SIZE + j) instanceof Empty) {
@@ -346,11 +346,11 @@ public class Game {
         System.out.println("-----------------------------------");
     }
 
-    public synchronized Piece getPiece(int index) {
+    public Piece getPiece(int index) {
         return board.get(index);
     }
 
-    public synchronized boolean isHasWhiteTurn() {
+    public boolean isHasWhiteTurn() {
         return hasWhiteTurn;
     }
 
@@ -377,7 +377,7 @@ public class Game {
         return hasEnded;
     }
 
-    public synchronized Boolean checkCheck(boolean forBlack) {
+    public Boolean checkCheck(boolean forBlack) {
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
                 .filter(p -> p.isWhite() == forBlack)
@@ -386,11 +386,11 @@ public class Game {
         return checkCheck(king);
     }
 
-    public synchronized Boolean checkCheck(King king) {
+    public Boolean checkCheck(King king) {
         return checkCheck(king, getPosition(king));
     }
 
-    public synchronized Boolean checkCheck(King king, Integer hypothteicalPosition) {
+    public Boolean checkCheck(King king, Integer hypothteicalPosition) {
         List<Piece> allOtherPieces = getAllOtherPieces(king);
         List<Integer> possibleEnemyMoves;
         for (Piece p : allOtherPieces) {
@@ -425,7 +425,7 @@ public class Game {
         return false;
     }
 
-    public synchronized Boolean checkCheckMate(boolean forBlack) {
+    public Boolean checkCheckMate(boolean forBlack) {
         // Muss vorher check sein
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
@@ -482,7 +482,7 @@ public class Game {
         return legalMoves;
     }
 
-    public synchronized boolean isCheck(boolean isWhite){
+    public boolean isCheck(boolean isWhite){
         List<Piece> allOtherPieces = getAllOwnPiecesWithoutKing(!isWhite); //getting all enemy pieces (getAllOwnPieces reversed)
         List<Integer> allMovesOfOtherPieces = new ArrayList<>();
         allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
@@ -497,14 +497,14 @@ public class Game {
 
     }
 
-    public synchronized boolean isCheckMate(boolean isWhite){
+    public boolean isCheckMate(boolean isWhite){
         List<Piece> allOwnPieces = getAllOwnPiecesWithKing(isWhite);//get all own pieces
         List<Integer> allMovesOfOwnPieces = new ArrayList<>();
         allOwnPieces.forEach(ownPiece -> legalMoves(ownPiece).forEach(ownMove -> allMovesOfOwnPieces.add(ownMove)));
 
         return isCheck(isWhite) && allMovesOfOwnPieces.isEmpty(); //wenn könig im schach und keine legalenzüge mehr dann is erst schachmatt
     }
-    public synchronized boolean isPatt(){
+    public boolean isPatt(){
         List<Piece> allOwnPieces = getAllOwnPiecesWithKing(true);//get all own pieces
         List<Integer> allMovesOfOwnPieces = new ArrayList<>();
         allOwnPieces.forEach(ownPiece -> legalMoves(ownPiece).forEach(ownMove -> allMovesOfOwnPieces.add(ownMove)));
