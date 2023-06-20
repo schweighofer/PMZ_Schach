@@ -1,4 +1,4 @@
-package at.kaindorf.pmz.bl;
+﻿package at.kaindorf.pmz.bl;
 
 import at.kaindorf.pmz.chess.FieldState;
 import at.kaindorf.pmz.chess.Piece;
@@ -32,15 +32,14 @@ public class Game {
 
     private final List<Piece> board;
 
-    private Integer lastPiece;
-    private List<Integer> lastPossibleMoves;
+    private int globalMoveCount = 0;
 
     public Game() {
         this.board = new ArrayList<>();
         setupBoard();
     }
 
-    private void setupBoard() {
+    private synchronized void setupBoard() {
         // top row
         board.add(new Rook(    true,    this, 0));
         board.add(new Knight(  true,    this, 0));
@@ -86,11 +85,11 @@ public class Game {
 
     }
 
-    public int getPosition(Piece piece) {
+    public synchronized int getPosition(Piece piece) {
         return board.indexOf(piece);
     }
 
-    public FieldState getFieldState(int index) {
+    public synchronized FieldState getFieldState(int index) {
         if (board.get(index) instanceof Empty) {
             return FieldState.NULL;
         }
@@ -102,7 +101,7 @@ public class Game {
         return FieldState.valueOf(fieldState);
     }
 
-    public List<Piece> getAllOtherPieces(Piece piece) {
+    public synchronized List<Piece> getAllOtherPieces(Piece piece) {
         List<Piece> allOtherPieces = new ArrayList<>(board);
         allOtherPieces = allOtherPieces.stream()
                 .filter(p -> !(p instanceof Empty))
@@ -111,11 +110,11 @@ public class Game {
         return allOtherPieces;
     }
 
-    public List<Piece> getAllOwnPiecesWithoutKing(Piece piece) {
+    public synchronized List<Piece> getAllOwnPiecesWithoutKing(Piece piece) {
         return getAllOwnPiecesWithoutKing(piece.isWhite());
     }
 
-    public List<Piece> getAllOwnPiecesWithoutKing(boolean color) {
+    public synchronized List<Piece> getAllOwnPiecesWithoutKing(boolean color) {
         List<Piece> allOtherPieces = new ArrayList<>(board);
         allOtherPieces = allOtherPieces.stream()
                 .filter(p -> !(p instanceof Empty))
@@ -124,7 +123,7 @@ public class Game {
         allOtherPieces.removeIf(p -> p instanceof King);
         return allOtherPieces;
     }
-    public List<Piece> getAllOwnPiecesWithKing(boolean color) {
+    public synchronized List<Piece> getAllOwnPiecesWithKing(boolean color) {
         List<Piece> allOtherPieces = new ArrayList<>(board);
         allOtherPieces = allOtherPieces.stream()
                 .filter(p -> !(p instanceof Empty))
@@ -133,9 +132,8 @@ public class Game {
         return allOtherPieces;
     }
 
-    public List<Integer> getPossibleMoves(int piecePosition) {
-        lastPiece = piecePosition;
-        lastPossibleMoves = board.get(lastPiece).obtainPossibleMoves();
+    public synchronized List<Integer> getPossibleMoves(int piecePosition, Piece lastPiece) {
+
 
         /*Piece toMove = board.get(piecePosition);
 
@@ -155,18 +153,15 @@ public class Game {
         }
 
         return lastPossibleMoves;*/
-        return legalMoves(board.get(lastPiece));
+        return legalMoves(lastPiece);
     }
 
-    public Map<Integer, Piece> simMove(int desiredPosition) {
-        if (!lastPossibleMoves.contains(desiredPosition)) {
-            return new HashMap<>();
-        }
+    public synchronized Map<Integer, Piece> simMove(int desiredPosition, int lastPiece) {
         Piece toMove = board.get(lastPiece);
 
         Map<Integer, Piece> history = new HashMap<>();
         history.put(desiredPosition, board.get(desiredPosition));
-        history.put(toMove.getPosition(), toMove);
+        history.put(lastPiece, toMove);
         boolean specialMove = false;
 
 
@@ -306,18 +301,16 @@ public class Game {
         if(!specialMove){
             board.set(desiredPosition, toMove);
         }
-
-
-
         board.set(lastPiece, new Empty(this));
 
         return history;
     }
-    public boolean move(int desiredPosition) {
+    public synchronized boolean move(int desiredPosition, int lastPiece) {
 
         hasWhiteTurn = !hasWhiteTurn;
+        globalMoveCount++;
         Piece toMove = board.get(lastPiece);
-        simMove(desiredPosition);
+        simMove(desiredPosition, lastPiece);
 
         /*DebugPiece debugPiece = new DebugPiece(false,this,0);
         String debugText = (toMove.isWhite()) + "\n" +
@@ -333,13 +326,13 @@ public class Game {
         return true;
     }
 
-    public List<Piece> getBoard() {
+    public synchronized List<Piece> getBoard() {
         return new ArrayList<>(this.board);
     }
 
     // DEBUG
 
-    public void printField() {
+    public synchronized void printField() {
         for (int i = 0; i < LINE_SIZE; i++) {
             for (int j = 0; j < LINE_SIZE; j++) {
                 if (board.get(i * LINE_SIZE + j) instanceof Empty) {
@@ -353,21 +346,38 @@ public class Game {
         System.out.println("-----------------------------------");
     }
 
-    public Piece getPiece(int index) {
+    public synchronized Piece getPiece(int index) {
         return board.get(index);
     }
 
-    public boolean isHasWhiteTurn() {
+    public synchronized boolean isHasWhiteTurn() {
         return hasWhiteTurn;
     }
 
-    // TODO: könig restrictions fertig machen, [Pawn fixen den 2er sprung am anfange], check, und checkMate, nach den vier sachen fertig
 
-    public boolean hasEnded() {
-        return (checkCheck(true) && checkCheckMate(true)) || (checkCheck(false) && checkCheckMate(false));
+    //todo: problem that white and black access function at same time and move pieces wrongly around?
+    private boolean isHasEndedInUse = false;
+
+    public synchronized boolean hasEnded() {
+        while (isHasEndedInUse) {
+            try {
+                wait(); // Wait until the previous call finishes
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        isHasEndedInUse = true;
+
+        boolean hasEnded = (isCheckMate(true) || isCheckMate(false) || isPatt());
+
+        isHasEndedInUse = false;
+        notify();
+
+        return hasEnded;
     }
 
-    public Boolean checkCheck(boolean forBlack) {
+    public synchronized Boolean checkCheck(boolean forBlack) {
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
                 .filter(p -> p.isWhite() == forBlack)
@@ -376,11 +386,11 @@ public class Game {
         return checkCheck(king);
     }
 
-    public Boolean checkCheck(King king) {
+    public synchronized Boolean checkCheck(King king) {
         return checkCheck(king, getPosition(king));
     }
 
-    public Boolean checkCheck(King king, Integer hypothteicalPosition) {
+    public synchronized Boolean checkCheck(King king, Integer hypothteicalPosition) {
         List<Piece> allOtherPieces = getAllOtherPieces(king);
         List<Integer> possibleEnemyMoves;
         for (Piece p : allOtherPieces) {
@@ -415,7 +425,7 @@ public class Game {
         return false;
     }
 
-    public Boolean checkCheckMate(boolean forBlack) {
+    public synchronized Boolean checkCheckMate(boolean forBlack) {
         // Muss vorher check sein
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
@@ -430,13 +440,23 @@ public class Game {
         return false;
     }
 
-    public List<Integer> legalMoves(Piece piece){
+    private boolean isLegalMovesInUse = false;
+    public synchronized List<Integer> legalMoves(Piece piece){
+        while (isLegalMovesInUse) {
+            try {
+                wait(); // Wait until the previous call finishes
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        isLegalMovesInUse = true;
+
         List<Integer> legalMoves = new ArrayList<>(); //list of legalMoves (not all possible are legal), gets filled in for loop
-        List<Integer> help = new ArrayList<>(lastPossibleMoves);
-        Map<Integer, Piece> history = new HashMap<>();
-        int initialPosition = piece.getPosition();
+        Map<Integer, Piece> history;
         for(Integer moveToPosition : piece.obtainPossibleMoves()){ //loop through all possibleMoves of piece for checking if legal
-            history = simMove(moveToPosition);
+            history = simMove(moveToPosition, getPosition(piece));
+
             List<Piece> allOtherPieces = getAllOtherPieces(piece);
             List<Integer> allMovesOfOtherPieces = new ArrayList<>();
             allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
@@ -450,17 +470,19 @@ public class Game {
                 legalMoves.add(moveToPosition);
             }
             for(Integer positionOfKilled : history.keySet()){
-                if(positionOfKilled >= 0 && positionOfKilled <= 63){
-                    board.set(positionOfKilled, history.get(positionOfKilled));
-                }
+                board.set(positionOfKilled, history.get(positionOfKilled));
             }
+            history = new HashMap<>();
             //board.set(initialPosition, piece);
         }
-        lastPossibleMoves = help;
+
+        isLegalMovesInUse = false;
+        notify();
+
         return legalMoves;
     }
 
-    public boolean isCheck(boolean isWhite){
+    public synchronized boolean isCheck(boolean isWhite){
         List<Piece> allOtherPieces = getAllOwnPiecesWithoutKing(!isWhite); //getting all enemy pieces (getAllOwnPieces reversed)
         List<Integer> allMovesOfOtherPieces = new ArrayList<>();
         allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
@@ -473,6 +495,26 @@ public class Game {
 
         return allMovesOfOtherPieces.contains(king.getPosition());
 
+    }
+
+    public synchronized boolean isCheckMate(boolean isWhite){
+        List<Piece> allOwnPieces = getAllOwnPiecesWithKing(isWhite);//get all own pieces
+        List<Integer> allMovesOfOwnPieces = new ArrayList<>();
+        allOwnPieces.forEach(ownPiece -> legalMoves(ownPiece).forEach(ownMove -> allMovesOfOwnPieces.add(ownMove)));
+
+        return isCheck(isWhite) && allMovesOfOwnPieces.isEmpty(); //wenn könig im schach und keine legalenzüge mehr dann is erst schachmatt
+    }
+    public synchronized boolean isPatt(){
+        List<Piece> allOwnPieces = getAllOwnPiecesWithKing(true);//get all own pieces
+        List<Integer> allMovesOfOwnPieces = new ArrayList<>();
+        allOwnPieces.forEach(ownPiece -> legalMoves(ownPiece).forEach(ownMove -> allMovesOfOwnPieces.add(ownMove)));
+
+        List<Piece> allOtherPieces = getAllOwnPiecesWithKing(false);//get all other pieces
+        List<Integer> allMovesOfOtherPieces = new ArrayList<>();
+        allOtherPieces.forEach(otherPiece -> legalMoves(otherPiece).forEach(otherMove -> allMovesOfOtherPieces.add(otherMove)));
+
+
+        return allMovesOfOwnPieces.isEmpty() || allMovesOfOtherPieces.isEmpty(); //wenn keine legalen züge mehr is patt(unentschieden
     }
    //todo: time
     /*

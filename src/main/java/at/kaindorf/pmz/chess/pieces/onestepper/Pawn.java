@@ -18,8 +18,8 @@ import static at.kaindorf.pmz.bl.Game.*;
 
 
 public class Pawn extends Piece {
-    public Pawn(Boolean isBlack, Game game, int moveCount) {
-        super(isBlack, game, moveCount);
+    public Pawn(Boolean isWhite, Game game, int moveCount) {
+        super(isWhite, game, moveCount);
     }
 
     @Override

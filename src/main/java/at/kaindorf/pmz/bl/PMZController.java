@@ -26,11 +26,13 @@ public class PMZController {
     private int maxGameId = 0;
     private Map<Integer, Game> games = new HashMap<>();
 
+
     public int startGame() {
         games.put(maxGameId, new Game());
         maxGameId += 2;
         return maxGameId - 2;
     }
+
 
     public List<Piece> getBoard(Integer id) {
         List<Piece> board = games.get(id / 2 * 2).getBoard();
@@ -55,13 +57,13 @@ public class PMZController {
 
     public List<Integer> getPossibleMoves(Integer id, Integer position) {
         if ((id % 2 == 0) == (games.get(id / 2 * 2).getPiece(position).isWhite())) {
-            return games.get(id / 2 * 2).getPossibleMoves(position);
+            return games.get(id / 2 * 2).getPossibleMoves(position, games.get(id / 2 * 2).getBoard().get(position));
         }
         return new ArrayList<Integer>();
     }
 
-    public boolean makeMove(Integer id, Integer target) {
-        return games.get(id / 2 * 2).move(target);
+    public boolean makeMove(Integer id, Integer target, int lastPiece) {
+        return games.get(id / 2 * 2).move(target, lastPiece);
     }
 
     public boolean hasBlackTurn(Integer id) {

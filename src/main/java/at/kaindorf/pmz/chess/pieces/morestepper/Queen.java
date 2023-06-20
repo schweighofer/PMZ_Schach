@@ -16,8 +16,8 @@ import static at.kaindorf.pmz.bl.Game.*;
  */
 
 public class Queen extends Piece {
-    public Queen(Boolean isBlack, Game game, int moveCount) {
-        super(isBlack, game, moveCount);
+    public Queen(Boolean isWhite, Game game, int moveCount) {
+        super(isWhite, game, moveCount);
     }
 
     @Override

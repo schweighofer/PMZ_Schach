@@ -113,13 +113,26 @@ const displayGameBoardRequest = async (url): void => {
             console.log("du bist im schach! :(");
             //todo: popup machen
         }
+        await waitOneSecond();
+        console.log("whats up ");
     } while ((await isOnTurn()) && !(await hasEnded()));
 
     //if(isCheckmate)
 
 }
 
+function waitOneSecond(): Promise<void> {
+    return new Promise<void>((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
+var POSITION;
 const planmoveOnline = (position) => {
+    POSITION = position;
+    console.log(POSITION);
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/` +GAMEID+"?position="+position;
     console.log(url);
     fetch(url)
@@ -153,8 +166,10 @@ const planmoveOnline = (position) => {
         })
 }
 const makemoveOnline = (position) =>{
+    console.log(POSITION);
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/`+GAMEID+`?target=`+position;
     const urlGame: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
+    url = url +'&lastPiece='+POSITION;
     console.log(url);
     const init = {
         method: 'post'

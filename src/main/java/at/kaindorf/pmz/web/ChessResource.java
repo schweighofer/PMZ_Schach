@@ -42,8 +42,8 @@ public class ChessResource {
     @Path("/move/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response makeMove(@PathParam("id") Integer id, @QueryParam("target") Integer target) {
-        if (PMZController.getInstance().makeMove(id, target)) {
+    public Response makeMove(@PathParam("id") Integer id, @QueryParam("target") Integer target, @QueryParam("lastPiece") Integer lastPiece) {
+        if (PMZController.getInstance().makeMove(id, target, lastPiece)) {
             return Response.accepted(PMZController.getInstance().getBoard(id)).build();
         }
         return Response.notModified().build();

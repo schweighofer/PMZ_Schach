@@ -185,23 +185,37 @@ var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, v
                     console.log("du bist im schach! :(");
                     //todo: popup machen
                 }
-                _d.label = 12;
-            case 12: return [4 /*yield*/, isOnTurn()];
-            case 13:
-                _c = (_d.sent());
-                if (!_c) return [3 /*break*/, 15];
-                return [4 /*yield*/, hasEnded()];
+                return [4 /*yield*/, waitOneSecond()];
+            case 12:
+                _d.sent();
+                console.log("whats up ");
+                _d.label = 13;
+            case 13: return [4 /*yield*/, isOnTurn()];
             case 14:
-                _c = !(_d.sent());
-                _d.label = 15;
+                _c = (_d.sent());
+                if (!_c) return [3 /*break*/, 16];
+                return [4 /*yield*/, hasEnded()];
             case 15:
-                if (_c) return [3 /*break*/, 1];
+                _c = !(_d.sent());
                 _d.label = 16;
-            case 16: return [2 /*return*/];
+            case 16:
+                if (_c) return [3 /*break*/, 1];
+                _d.label = 17;
+            case 17: return [2 /*return*/];
         }
     });
 }); };
+function waitOneSecond() {
+    return new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve();
+        }, 1000);
+    });
+}
+var POSITION;
 var planmoveOnline = function (position) {
+    POSITION = position;
+    console.log(POSITION);
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/" + GAMEID + "?position=" + position;
     console.log(url);
     fetch(url)
@@ -234,8 +248,10 @@ var planmoveOnline = function (position) {
     });
 };
 var makemoveOnline = function (position) {
+    console.log(POSITION);
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/" + GAMEID + "?target=" + position;
     var urlGame = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + GAMEID;
+    url = url + '&lastPiece=' + POSITION;
     console.log(url);
     var init = {
         method: 'post'

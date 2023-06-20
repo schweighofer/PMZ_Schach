@@ -3,6 +3,7 @@ package at.kaindorf.pmz.chess.pieces;
 import at.kaindorf.pmz.bl.Game;
 import at.kaindorf.pmz.chess.Piece;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,6 @@ public class Empty extends Piece {
 
     @Override
     public List<Integer> obtainPossibleMoves() {
-        return null;
+        return new ArrayList<>();
     }
 }
