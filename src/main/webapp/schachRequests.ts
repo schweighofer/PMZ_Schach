@@ -23,7 +23,7 @@ const startGame = () => {
 
     // @ts-ignore
     var gameID:number;
-    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start`;
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start?time=`+20;
     fetch(url)
         .then(res => {
             if (!res.ok) {
@@ -90,51 +90,37 @@ const gameIDInputed = (): void => {
 }
 const displayGameBoardRequest = async (url): void => {
     var isBoardNotAktuell : boolean = true;
-    do {
-        if(isBoardNotAktuell){
-            fetch(url)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error("GET REQUEST FAILED");
-                    }
-                    return res.json();
-                })
-                .then(gameBoardJSON => {
-                    displayGameBoard(gameBoardJSON, []);
-                });
-            isBoardNotAktuell = false;
-        }
+    if(!(await hasEnded())) {
+        do {
+            if (isBoardNotAktuell) {
+                fetch(url)
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error("GET REQUEST FAILED");
+                        }
+                        return res.json();
+                    })
+                    .then(gameBoardJSON => {
+                        displayGameBoard(gameBoardJSON, []);
+                    });
+                isBoardNotAktuell = false;
+            }
 
-        if(!(await isOnTurn()) && !(await hasEnded())){
-            do{}while (!(await isOnTurn()) && !(await hasEnded()));
-            isBoardNotAktuell = true;
-        }
-        if((await isCheck())){
-            console.log("du bist im schach! :(");
-            //todo: popup machen
-        }
-        await waitOneSecond();
-        console.log("whats up ");
-    } while ((await isOnTurn()) && !(await hasEnded()));
+            if (!(await isOnTurn()) && !(await hasEnded())) {
+                do {
+                } while (!(await isOnTurn()) && !(await hasEnded()));
+                isBoardNotAktuell = true;
+            }
+            if ((await isCheck())) {
+                console.log("du bist im schach! :(");
+                //todo: popup machen
+            }
+            console.log("whats up ");
+            console.log(await isOnTurn());
+        } while ((await isOnTurn()) && !(await hasEnded()));
+    }
 
-    //if(isCheckmate)
-
-}
-
-function waitOneSecond(): Promise<void> {
-    return new Promise<void>((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, 1000);
-    });
-}
-
-var POSITION;
-const planmoveOnline = (position) => {
-    POSITION = position;
-    console.log(POSITION);
-    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/` +GAMEID+"?position="+position;
-    console.log(url);
+    console.log("uga buga bin draußen und spiel is vorbei");
     fetch(url)
         .then(res => {
             if (!res.ok) {
@@ -142,29 +128,52 @@ const planmoveOnline = (position) => {
             }
             return res.json();
         })
-        .then(moveAbleJSON => {
-            console.log(Object.values(moveAbleJSON));
-            const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +GAMEID;
-            fetch(url)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error("GET REQUEST FAILED");
-                    }
-                    return res.json();
-                })
-                .then(gameBoardJSON => {
-                    displayGameBoard(gameBoardJSON, Object.values(moveAbleJSON));
-                    console.log("aaa")
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        })
-        .catch(err => {
-            console.log(err);
+        .then(gameBoardJSON => {
+            displayGameBoard(gameBoardJSON, []);
+        });
+    //if(isCheckmate)
 
-        })
 }
+
+
+var POSITION;
+const planmoveOnline = async (position) => {
+    if(!(await hasEnded())) {
+        POSITION = position;
+        console.log(POSITION);
+        const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/` + GAMEID + "?position=" + position;
+        console.log(url);
+        fetch(url)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("GET REQUEST FAILED");
+                }
+                return res.json();
+            })
+            .then(moveAbleJSON => {
+                console.log(Object.values(moveAbleJSON));
+                const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` + GAMEID;
+                fetch(url)
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error("GET REQUEST FAILED");
+                        }
+                        return res.json();
+                    })
+                    .then(gameBoardJSON => {
+                        displayGameBoard(gameBoardJSON, Object.values(moveAbleJSON));
+                        console.log("aaa")
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            })
+            .catch(err => {
+                console.log(err);
+
+            })
+        }
+    }
 const makemoveOnline = (position) =>{
     console.log(POSITION);
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/`+GAMEID+`?target=`+position;

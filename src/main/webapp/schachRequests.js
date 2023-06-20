@@ -53,7 +53,7 @@ var startGame = function () {
     document.getElementById("joinGameButton").style.display = "none";
     // @ts-ignore
     var gameID;
-    var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start";
+    var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start?time=" + 20;
     fetch(url)
         .then(function (res) {
         if (!res.ok) {
@@ -134,13 +134,16 @@ var gameIDInputed = function () {
     displayGameBoardRequest(url);
 };
 var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, void 0, function () {
-    var isBoardNotAktuell, _a, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
+    var isBoardNotAktuell, _a, _b, _c, _d, _e;
+    return __generator(this, function (_f) {
+        switch (_f.label) {
             case 0:
                 isBoardNotAktuell = true;
-                _d.label = 1;
+                return [4 /*yield*/, hasEnded()];
             case 1:
+                if (!!(_f.sent())) return [3 /*break*/, 18];
+                _f.label = 2;
+            case 2:
                 if (isBoardNotAktuell) {
                     fetch(url)
                         .then(function (res) {
@@ -155,98 +158,114 @@ var displayGameBoardRequest = function (url) { return __awaiter(_this, void 0, v
                     isBoardNotAktuell = false;
                 }
                 return [4 /*yield*/, isOnTurn()];
-            case 2:
-                _a = !(_d.sent());
-                if (!_a) return [3 /*break*/, 4];
-                return [4 /*yield*/, hasEnded()];
             case 3:
-                _a = !(_d.sent());
-                _d.label = 4;
-            case 4:
-                if (!_a) return [3 /*break*/, 10];
-                _d.label = 5;
-            case 5: return [4 /*yield*/, isOnTurn()];
-            case 6:
-                _b = !(_d.sent());
-                if (!_b) return [3 /*break*/, 8];
+                _a = !(_f.sent());
+                if (!_a) return [3 /*break*/, 5];
                 return [4 /*yield*/, hasEnded()];
+            case 4:
+                _a = !(_f.sent());
+                _f.label = 5;
+            case 5:
+                if (!_a) return [3 /*break*/, 11];
+                _f.label = 6;
+            case 6: return [4 /*yield*/, isOnTurn()];
             case 7:
-                _b = !(_d.sent());
-                _d.label = 8;
+                _b = !(_f.sent());
+                if (!_b) return [3 /*break*/, 9];
+                return [4 /*yield*/, hasEnded()];
             case 8:
-                if (_b) return [3 /*break*/, 5];
-                _d.label = 9;
+                _b = !(_f.sent());
+                _f.label = 9;
             case 9:
+                if (_b) return [3 /*break*/, 6];
+                _f.label = 10;
+            case 10:
                 isBoardNotAktuell = true;
-                _d.label = 10;
-            case 10: return [4 /*yield*/, isCheck()];
-            case 11:
-                if ((_d.sent())) {
+                _f.label = 11;
+            case 11: return [4 /*yield*/, isCheck()];
+            case 12:
+                if ((_f.sent())) {
                     console.log("du bist im schach! :(");
                     //todo: popup machen
                 }
-                return [4 /*yield*/, waitOneSecond()];
-            case 12:
-                _d.sent();
                 console.log("whats up ");
-                _d.label = 13;
-            case 13: return [4 /*yield*/, isOnTurn()];
-            case 14:
-                _c = (_d.sent());
-                if (!_c) return [3 /*break*/, 16];
-                return [4 /*yield*/, hasEnded()];
+                _d = (_c = console).log;
+                return [4 /*yield*/, isOnTurn()];
+            case 13:
+                _d.apply(_c, [_f.sent()]);
+                _f.label = 14;
+            case 14: return [4 /*yield*/, isOnTurn()];
             case 15:
-                _c = !(_d.sent());
-                _d.label = 16;
+                _e = (_f.sent());
+                if (!_e) return [3 /*break*/, 17];
+                return [4 /*yield*/, hasEnded()];
             case 16:
-                if (_c) return [3 /*break*/, 1];
-                _d.label = 17;
-            case 17: return [2 /*return*/];
+                _e = !(_f.sent());
+                _f.label = 17;
+            case 17:
+                if (_e) return [3 /*break*/, 2];
+                _f.label = 18;
+            case 18:
+                console.log("uga buga bin draußen und spiel is vorbei");
+                fetch(url)
+                    .then(function (res) {
+                    if (!res.ok) {
+                        throw new Error("GET REQUEST FAILED");
+                    }
+                    return res.json();
+                })
+                    .then(function (gameBoardJSON) {
+                    displayGameBoard(gameBoardJSON, []);
+                });
+                return [2 /*return*/];
         }
     });
 }); };
-function waitOneSecond() {
-    return new Promise(function (resolve) {
-        setTimeout(function () {
-            resolve();
-        }, 1000);
-    });
-}
 var POSITION;
-var planmoveOnline = function (position) {
-    POSITION = position;
-    console.log(POSITION);
-    var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/" + GAMEID + "?position=" + position;
-    console.log(url);
-    fetch(url)
-        .then(function (res) {
-        if (!res.ok) {
-            throw new Error("GET REQUEST FAILED");
+var planmoveOnline = function (position) { return __awaiter(_this, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, hasEnded()];
+            case 1:
+                if (!(_a.sent())) {
+                    POSITION = position;
+                    console.log(POSITION);
+                    url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/moves/" + GAMEID + "?position=" + position;
+                    console.log(url);
+                    fetch(url)
+                        .then(function (res) {
+                        if (!res.ok) {
+                            throw new Error("GET REQUEST FAILED");
+                        }
+                        return res.json();
+                    })
+                        .then(function (moveAbleJSON) {
+                        console.log(Object.values(moveAbleJSON));
+                        var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + GAMEID;
+                        fetch(url)
+                            .then(function (res) {
+                            if (!res.ok) {
+                                throw new Error("GET REQUEST FAILED");
+                            }
+                            return res.json();
+                        })
+                            .then(function (gameBoardJSON) {
+                            displayGameBoard(gameBoardJSON, Object.values(moveAbleJSON));
+                            console.log("aaa");
+                        })
+                            .catch(function (err) {
+                            console.log(err);
+                        });
+                    })
+                        .catch(function (err) {
+                        console.log(err);
+                    });
+                }
+                return [2 /*return*/];
         }
-        return res.json();
-    })
-        .then(function (moveAbleJSON) {
-        console.log(Object.values(moveAbleJSON));
-        var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/" + GAMEID;
-        fetch(url)
-            .then(function (res) {
-            if (!res.ok) {
-                throw new Error("GET REQUEST FAILED");
-            }
-            return res.json();
-        })
-            .then(function (gameBoardJSON) {
-            displayGameBoard(gameBoardJSON, Object.values(moveAbleJSON));
-            console.log("aaa");
-        })
-            .catch(function (err) {
-            console.log(err);
-        });
-    })
-        .catch(function (err) {
-        console.log(err);
     });
-};
+}); };
 var makemoveOnline = function (position) {
     console.log(POSITION);
     var url = "http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/move/" + GAMEID + "?target=" + position;
