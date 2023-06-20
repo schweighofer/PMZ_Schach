@@ -5,6 +5,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 
 /**
  * @Author Marcus Schweighofer
@@ -18,8 +20,8 @@ public class ChessResource {
     @Path("/start")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startGame() {
-        return Response.accepted(PMZController.getInstance().startGame()).build();
+    public Response startGame(@QueryParam("time") int time) {
+        return Response.accepted(PMZController.getInstance().startGame(time)).build();
     }
 
     @GET
@@ -79,5 +81,44 @@ public class ChessResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response hasEnded(@PathParam("id") Integer id) {
         return Response.ok(PMZController.getInstance().hasEnded(id)).build();
+    }
+
+    @GET
+    @Path("/getName/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getName(@PathParam("id") Integer id) {
+        return Response.ok(List.of(
+                PMZController.getInstance().getName(id),
+                PMZController.getInstance().getName((id % 2 == 0 ? id + 1 : id - 1))
+        )).build();
+    }
+
+    @POST
+    @Path("/setName/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setName(@PathParam("id") Integer id, @QueryParam("name") String name) {
+        PMZController.getInstance().setName(id, name);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/getTime/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTime(@PathParam("id") Integer id) {
+        return Response.ok(List.of(
+                PMZController.getInstance().getTime(id),
+                PMZController.getInstance().getTime((id % 2 == 0 ? id + 1 : id - 1))
+        )).build();
+    }
+
+    @GET
+    @Path("/getStats/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStats(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().getStats(id)).build();
     }
 }

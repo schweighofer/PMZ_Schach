@@ -10,6 +10,8 @@ import at.kaindorf.pmz.chess.pieces.onestepper.King;
 import at.kaindorf.pmz.chess.pieces.onestepper.Knight;
 import at.kaindorf.pmz.chess.pieces.onestepper.Pawn;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,9 @@ import java.util.stream.Collectors;
  */
 
 public class Game {
+
+    private String[] playerNames = new String[2];
+
     public static final Integer LINE_SIZE = 8;
     public static final Float DIVISOR_LINE_SIZE = 1 / (float)(LINE_SIZE);
     public static final Integer FIELD_SIZE = LINE_SIZE * LINE_SIZE;
@@ -34,9 +39,21 @@ public class Game {
 
     private int globalMoveCount = 0;
 
-    public Game() {
+
+    private int maxTime;
+    private LocalDateTime[] startingTimes = new LocalDateTime[2];
+    private int[] secondsOfWait = {0, 0};
+    private LocalDateTime waitFrom;
+    private LocalDateTime stopTime;
+    private boolean[] hasTimeEnded = {false, false};
+
+    public Game(int maxTime) {
+        this.maxTime = maxTime;
         this.board = new ArrayList<>();
         setupBoard();
+
+        // white counter instantly begins
+        startingTimes[0] = LocalDateTime.now();
     }
 
     private synchronized void setupBoard() {
@@ -353,10 +370,31 @@ public class Game {
         debugPiece.setDebugText(debugText);
         board.set(30, debugPiece);*/
 
+        // add the waited time of the player to the waitTracker
+        if (waitFrom != null) {
+            secondsOfWait[globalMoveCount % 2] += Duration.between(waitFrom, LocalDateTime.now()).toSeconds();
+        }
 
+        // make the move
         toMove.setMoveCount(toMove.getMoveCount() + 1);
 
+        // logic for starting time countdown for black
+        if (globalMoveCount == 1) {
+            startingTimes[1] = LocalDateTime.now();
+        }
+
+        // update the wait
+        waitFrom = LocalDateTime.now();
+
         return true;
+    }
+
+    public String getPlayerName(int index) {
+        return playerNames[index];
+    }
+
+    public void setPlayerName(String playerName, int index) {
+        this.playerNames[index] = playerName;
     }
 
     public synchronized List<Piece> getBoard() {
@@ -383,7 +421,27 @@ public class Game {
         return board.get(index);
     }
 
+    public int getTime(int id) {
+        if (stopTime != null) {
+            return (int)(Duration.between(startingTimes[id], stopTime).toSeconds() - secondsOfWait[id]);
+        }
+        return (int)(Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() - secondsOfWait[id]);
+    }
+
+    public boolean getHasTimeEnded(int id) {
+        return hasTimeEnded[id];
+    }
+
     public synchronized boolean isHasWhiteTurn() {
+        // logic for if time runs out
+        int id = (hasWhiteTurn ? 1 : 0);
+        if (Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() + secondsOfWait[id] >= maxTime) {
+            // TODO spiel beenden
+            hasTimeEnded[id] = true;
+        }
+
+
+        // retrun the result
         return hasWhiteTurn;
     }
 
@@ -401,7 +459,10 @@ public class Game {
 
         isHasEndedInUse = true;
 
-        boolean hasEnded = (isCheckMate(true) || isCheckMate(false) || isPatt());
+        boolean hasEnded = (isCheckMate(true) || isCheckMate(false) || isPatt() || hasTimeEnded[0] || hasTimeEnded[1]);
+        if (hasEnded) {
+            stopTime = LocalDateTime.now();
+        }
 
         isHasEndedInUse = false;
         notify();
@@ -548,7 +609,7 @@ public class Game {
 
         return allMovesOfOwnPieces.isEmpty() || allMovesOfOtherPieces.isEmpty(); //wenn keine legalen züge mehr is patt(unentschieden
     }
-   //todo: time
+   //todo: time fertig hfftl kein problem mit threads
     /*
                 time in seconds as queryparam on startGame request
                 start whiteCountdownThread for white when black made their first move
@@ -564,7 +625,7 @@ public class Game {
                         when white makes request
                             white time first then black
      */
-    //todo: name
+    //todo: name fertig
     /*
                setName request
                     PathParam {id}

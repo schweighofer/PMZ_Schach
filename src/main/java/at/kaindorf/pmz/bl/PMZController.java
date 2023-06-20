@@ -27,8 +27,8 @@ public class PMZController {
     private Map<Integer, Game> games = new HashMap<>();
 
 
-    public int startGame() {
-        games.put(maxGameId, new Game());
+    public int startGame(int time) {
+        games.put(maxGameId, new Game(time));
         maxGameId += 2;
         return maxGameId - 2;
     }
@@ -71,7 +71,7 @@ public class PMZController {
     }
 
     public static void main(String[] args) {
-        Game game = new Game();
+        Game game = new Game(99999);
         //game.getBoard().set(11, new Rook(false, game));
         System.out.println(game.checkCheck(true));
         game.printField();
@@ -88,5 +88,33 @@ public class PMZController {
 
     public boolean hasEnded(Integer id) {
         return games.get(id / 2 * 2).hasEnded();
+    }
+
+    public String getName(Integer id) {
+        return games.get(id).getPlayerName(id % 2);
+    }
+
+    public void setName(Integer id, String name) {
+        games.get(id).setPlayerName(name, id % 2);
+    }
+
+    public int getTime(Integer id) {
+        return games.get(id).getTime(id % 2);
+    }
+
+    public String getStats(Integer id) {
+        Game game = games.get(id);
+        if (game.isPatt()) {
+            return "Draw";
+        } else if (game.isCheckMate(true)) { // hier bei den 2 weiß ich nicht steht so im LW, kann auch andersrum sein
+            return "White won through checkmate";
+        } else if (game.isCheckMate(false)) {
+            return "Black won thorugh checkmate";
+        } else if (game.getHasTimeEnded(0)) { // 0 --> white
+            return "Black won through time";
+        } else if (game.getHasTimeEnded(1)) { // 1 --> black
+            return "White won through time";
+        }
+        return "noone won this should not happen";
     }
 }
