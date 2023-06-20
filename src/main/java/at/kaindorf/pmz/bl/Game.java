@@ -156,7 +156,7 @@ public class Game {
         return legalMoves(lastPiece);
     }
 
-    public Map<Integer, Piece> simMove(int desiredPosition, int lastPiece) {
+    public synchronized Map<Integer, Piece> simMove(int desiredPosition, int lastPiece) {
         Piece toMove = board.get(lastPiece);
 
         Map<Integer, Piece> history = new HashMap<>();
@@ -338,7 +338,7 @@ public class Game {
 
         return history;
     }
-    public boolean move(int desiredPosition, int lastPiece) {
+    public synchronized boolean move(int desiredPosition, int lastPiece) {
 
         hasWhiteTurn = !hasWhiteTurn;
         globalMoveCount++;
@@ -359,7 +359,7 @@ public class Game {
         return true;
     }
 
-    public List<Piece> getBoard() {
+    public synchronized List<Piece> getBoard() {
         return new ArrayList<>(this.board);
     }
 
@@ -379,11 +379,11 @@ public class Game {
         System.out.println("-----------------------------------");
     }
 
-    public Piece getPiece(int index) {
+    public synchronized Piece getPiece(int index) {
         return board.get(index);
     }
 
-    public boolean isHasWhiteTurn() {
+    public synchronized boolean isHasWhiteTurn() {
         return hasWhiteTurn;
     }
 
@@ -409,7 +409,7 @@ public class Game {
         return hasEnded;
     }
 
-    public Boolean checkCheck(boolean forBlack) {
+    public synchronized Boolean checkCheck(boolean forBlack) {
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
                 .filter(p -> p.isWhite() == forBlack)
@@ -418,7 +418,7 @@ public class Game {
         return checkCheck(king);
     }
 
-    public Boolean checkCheck(King king) {
+    public synchronized Boolean checkCheck(King king) {
         return checkCheck(king, getPosition(king));
     }
 
@@ -457,7 +457,7 @@ public class Game {
         return false;
     }
 
-    public Boolean checkCheckMate(boolean forBlack) {
+    public synchronized Boolean checkCheckMate(boolean forBlack) {
         // Muss vorher check sein
         King king = (King) board.stream()
                 .filter(p -> p instanceof King)
@@ -514,7 +514,7 @@ public class Game {
         return legalMoves;
     }
 
-    public boolean isCheck(boolean isWhite){
+    public synchronized boolean isCheck(boolean isWhite){
         List<Piece> allOtherPieces = getAllOwnPiecesWithoutKing(!isWhite); //getting all enemy pieces (getAllOwnPieces reversed)
         List<Integer> allMovesOfOtherPieces = new ArrayList<>();
         allOtherPieces.forEach(enemyPiece -> enemyPiece.obtainPossibleMoves().forEach(enemyMove -> allMovesOfOtherPieces.add(enemyMove)));//put allPossibleMoves of enemy in one list
@@ -529,14 +529,14 @@ public class Game {
 
     }
 
-    public boolean isCheckMate(boolean isWhite){
+    public synchronized boolean isCheckMate(boolean isWhite){
         List<Piece> allOwnPieces = getAllOwnPiecesWithKing(isWhite);//get all own pieces
         List<Integer> allMovesOfOwnPieces = new ArrayList<>();
         allOwnPieces.forEach(ownPiece -> legalMoves(ownPiece).forEach(ownMove -> allMovesOfOwnPieces.add(ownMove)));
 
         return isCheck(isWhite) && allMovesOfOwnPieces.isEmpty(); //wenn könig im schach und keine legalenzüge mehr dann is erst schachmatt
     }
-    public boolean isPatt(){
+    public synchronized boolean isPatt(){
         List<Piece> allOwnPieces = getAllOwnPiecesWithKing(true);//get all own pieces
         List<Integer> allMovesOfOwnPieces = new ArrayList<>();
         allOwnPieces.forEach(ownPiece -> legalMoves(ownPiece).forEach(ownMove -> allMovesOfOwnPieces.add(ownMove)));
