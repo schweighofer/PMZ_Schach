@@ -160,8 +160,14 @@ public class Game {
         Piece toMove = board.get(lastPiece);
 
         Map<Integer, Piece> history = new HashMap<>();
-        history.put(desiredPosition, board.get(desiredPosition));
-        history.put(lastPiece, toMove);
+        if(desiredPosition < 64 && desiredPosition >= 0){
+            history.put(desiredPosition, board.get(desiredPosition));
+        }
+        if(lastPiece < 64 && lastPiece >= 0){
+            history.put(lastPiece, toMove);
+        }
+
+
         boolean specialMove = false;
 
 
@@ -178,8 +184,10 @@ public class Game {
                             history.put(61, new Empty(this));
                             history.put(62, new Empty(this));
 
+                            if(toMove.getPosition() < 64 && toMove.getPosition() >= 0){
+                                board.set(toMove.getPosition(), new Empty(this));
+                            }
 
-                            board.set(toMove.getPosition(), new Empty(this));
                             board.set(61, toMove);
                             board.set(60, board.get(63));
                             board.set(63, new Empty(this));
@@ -197,7 +205,9 @@ public class Game {
                             history.put(57, new Empty(this));
                             history.put(58, new Empty(this));
 
-                            board.set(toMove.getPosition(), new Empty(this));
+                            if(toMove.getPosition() < 64 && toMove.getPosition() >= 0){
+                                board.set(toMove.getPosition(), new Empty(this));
+                            }
                             board.set(57, toMove);
                             board.set(58, board.get(56));
                             board.set(56, new Empty(this));
@@ -217,7 +227,9 @@ public class Game {
                             history.put(1, new Empty(this));
                             history.put(2, new Empty(this));
 
-                            board.set(toMove.getPosition(), new Empty(this));
+                            if(toMove.getPosition() < 64 && toMove.getPosition() >= 0){
+                                board.set(toMove.getPosition(), new Empty(this));
+                            }
                             board.set(1, toMove);
                             board.set(2, board.get(0));
                             board.set(0, new Empty(this));
@@ -236,7 +248,9 @@ public class Game {
                             history.put(5, new Empty(this));
                             history.put(6, new Empty(this));
 
-                            board.set(toMove.getPosition(), new Empty(this));
+                            if(toMove.getPosition() < 64 && toMove.getPosition() >= 0){
+                                board.set(toMove.getPosition(), new Empty(this));
+                            }
                             board.set(5, toMove);
                             board.set(4, board.get(7));
                             board.set(7, new Empty(this));
@@ -250,8 +264,12 @@ public class Game {
         //pawn transformation:
         if (toMove instanceof Pawn && ((!toMove.isWhite() && desiredPosition <= 7) || (toMove.isWhite() && desiredPosition >= 56))){//transformation of pawn to queen
             specialMove = true;
-            board.set(toMove.getPosition(), new Empty(this));
-            board.set(desiredPosition, new Queen(toMove.isWhite(), this, 0));//automatically transform to queen because choice is too much work
+            if(toMove.getPosition() < 64 && toMove.getPosition() >= 0){
+                board.set(toMove.getPosition(), new Empty(this));
+            }
+            if(desiredPosition < 64 && desiredPosition >= 0){
+                board.set(desiredPosition, new Queen(toMove.isWhite(), this, 0));//automatically transform to queen because choice is too much work
+            }
 
         }
         //en passant:
@@ -261,8 +279,12 @@ public class Game {
                 if(toMove.getPosition() >= 33 && toMove.getPosition() <= 39){
                     if(desiredPosition == toMove.getPosition()+7){
                         if(board.get(toMove.getPosition()-1) instanceof Pawn && !board.get(toMove.getPosition()-1).isWhite() && board.get(toMove.getPosition()-1).getMoveCount() == 1 && board.get(toMove.getPosition()+7) instanceof Empty){
-                            history.put(toMove.getPosition() - 1, board.get(toMove.getPosition() - 1));
-                            board.set(toMove.getPosition() - 1, new Empty(this));
+
+                            if(toMove.getPosition() - 1 < 64 && toMove.getPosition() - 1 >= 0){
+                                history.put(toMove.getPosition() - 1, board.get(toMove.getPosition() - 1));
+                                board.set(toMove.getPosition() - 1, new Empty(this));
+                            }
+
                         }
                     }
 
@@ -270,8 +292,10 @@ public class Game {
                 if(toMove.getPosition() >= 32 && toMove.getPosition() <= 38){
                     if(desiredPosition == toMove.getPosition()+9){
                         if(board.get(toMove.getPosition()+1) instanceof Pawn && !board.get(toMove.getPosition()+1).isWhite() && board.get(toMove.getPosition()+1).getMoveCount() == 1 && board.get(toMove.getPosition()+9) instanceof Empty){
-                            history.put(toMove.getPosition() + 1, board.get(toMove.getPosition() + 1));
-                            board.set(toMove.getPosition() + 1, new Empty(this));
+                            if(toMove.getPosition() + 1 < 64 && toMove.getPosition() + 1 >= 0){
+                                history.put(toMove.getPosition() + 1, board.get(toMove.getPosition() + 1));
+                                board.set(toMove.getPosition() + 1, new Empty(this));
+                            }
                         }
                     }
 
@@ -281,8 +305,10 @@ public class Game {
                 if(toMove.getPosition() >= 25 && toMove.getPosition() <= 31){
                     if(desiredPosition == toMove.getPosition()-9){
                         if(board.get(toMove.getPosition()-1) instanceof Pawn && board.get(toMove.getPosition()-1).isWhite() && board.get(toMove.getPosition()-1).getMoveCount() == 1 && board.get(toMove.getPosition()-9) instanceof Empty){
-                            history.put(toMove.getPosition() - 1, board.get(toMove.getPosition() - 1));
-                            board.set(toMove.getPosition() - 1, new Empty(this));
+                            if(toMove.getPosition() - 1 < 64 && toMove.getPosition() - 1 >= 0){
+                                history.put(toMove.getPosition() - 1, board.get(toMove.getPosition() - 1));
+                                board.set(toMove.getPosition() - 1, new Empty(this));
+                            }
                         }
                     }
 
@@ -290,8 +316,10 @@ public class Game {
                 if(toMove.getPosition() >= 24 && toMove.getPosition() <= 30){
                     if(desiredPosition == toMove.getPosition()-7){
                         if(board.get(toMove.getPosition()+1) instanceof Pawn && board.get(toMove.getPosition()+1).isWhite() && board.get(toMove.getPosition()+1).getMoveCount() == 1 && board.get(toMove.getPosition()-7) instanceof Empty){
-                            history.put(toMove.getPosition() + 1, board.get(toMove.getPosition() + 1));
-                            board.set(toMove.getPosition() + 1, new Empty(this));
+                            if(toMove.getPosition() + 1 < 64 && toMove.getPosition() + 1 >= 0){
+                                history.put(toMove.getPosition() + 1, board.get(toMove.getPosition() + 1));
+                                board.set(toMove.getPosition() + 1, new Empty(this));
+                            }
                         }
                     }
                 }
@@ -299,9 +327,14 @@ public class Game {
         }
 
         if(!specialMove){
-            board.set(desiredPosition, toMove);
+            if(desiredPosition < 64 && desiredPosition >= 0){
+                board.set(desiredPosition, toMove);
+            }
         }
-        board.set(lastPiece, new Empty(this));
+        if(lastPiece < 64 && lastPiece >= 0){
+            board.set(lastPiece, new Empty(this));
+        }
+
 
         return history;
     }
