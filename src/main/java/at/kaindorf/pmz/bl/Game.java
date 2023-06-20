@@ -423,9 +423,9 @@ public class Game {
 
     public int getTime(int id) {
         if (stopTime != null) {
-            return (int)(Duration.between(startingTimes[id], stopTime).toSeconds() - secondsOfWait[id]);
+            return maxTime - (int)(Duration.between(startingTimes[id], stopTime).toSeconds() - secondsOfWait[id]);
         }
-        return (int)(Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() - secondsOfWait[id]);
+        return maxTime - (int)(Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() - secondsOfWait[id]);
     }
 
     public boolean getHasTimeEnded(int id) {
@@ -435,7 +435,7 @@ public class Game {
     public synchronized boolean isHasWhiteTurn() {
         // logic for if time runs out
         int id = (hasWhiteTurn ? 1 : 0);
-        if (Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() + secondsOfWait[id] >= maxTime) {
+        if (Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() - secondsOfWait[id] >= maxTime) {
             // TODO spiel beenden
             hasTimeEnded[id] = true;
         }
