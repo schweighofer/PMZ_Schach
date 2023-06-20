@@ -5,56 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/bulma.css">
     <title>Schach</title>
 
-    <style>
 
-    
-
-        .chessButtonSelected {
-          height: 100px;
-          width: 100px;
-          background: darkolivegreen;
-          font-Size: 80px;
-          text-align: center;
-          line-height: 0;
-          margin: 0 0 0 0;
-          border: 0.5px solid #000;
-        }
-
-        .blackField{
-          height: 100px;
-          width: 100px;
-          background: #888;
-          font-Size: 80px;
-          text-align: center;
-          line-height: 0;
-          margin: 0 0 0 0;
-          border: 0.5px solid #000;
-        }
-
-        .greenField{
-            height: 100px;
-            width: 100px;
-            background: green;
-            font-Size: 80px;
-            text-align: center;
-            line-height: 0;
-            margin: 0 0 0 0;
-            border: 0.5px solid #000;
-        }
-
-        .whiteField{
-          height: 100px;
-          width: 100px;
-          background: #eee;
-          font-Size: 80px;
-          text-align: center;
-          line-height: 0;
-          margin: 0 0 0 0;
-          border: 0.5px solid #000;
-        }
-    </style>
     <script src="schachRequests.js"></script>
     <script>            /*
             S_T: Schwarzer Turm
@@ -879,41 +833,227 @@
             let isPosWaysKinEmpty = positionsibleWaysKini(name, oriButtonVal);
         }
     </script>
+    <style>
+
+
+
+        .chessButtonSelected {
+            height: 12.5%;
+            width: 12.5%;
+            background: darkolivegreen;
+            font-Size: 5vw;
+            text-align: center;
+            line-height: 0;
+            margin: 0 0 0 0;
+            border: 0.5px solid #000;
+        }
+
+        .blackField{
+            height: 12.5%;
+            width: 12.5%;
+            background: #888;
+            font-Size: 5vw;
+            text-align: center;
+            line-height: 0;
+            margin: 0 0 0 0;
+            border: 0.5px solid #000;
+        }
+
+        .greenField{
+            height: 12.5%;
+            width: 12.5%;
+            background: green;
+            font-Size: 5vw;
+            text-align: center;
+            line-height: 0;
+            margin: 0 0 0 0;
+            border: 0.5px solid #000;
+        }
+
+        .whiteField{
+            height: 12.5%;
+            width: 12.5%;
+            background: #eee;
+            font-Size: 5vw;
+            text-align: center;
+            line-height: 0;
+            margin: 0 0 0 0;
+            border: 0.5px solid #000;
+        }
+        .header {
+            background-color: #555;
+            height: 10vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+        #playingField {
+            height: 100%;
+            width: 100%;
+            /*padding-top: 15vh; /* Adjust the value to match header height */
+            position: relative;
+        }
+
+        #playingField form {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 0, 0, 0.8); /* Pleasing red color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Pop-up content style */
+        #popup {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        /* Input field style */
+        #popup input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        /* Close button style */
+        #popup #close-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        body {
+            background-color: #333; /* Dark grey */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+
+        }
+        .right-column img {
+            width: 70%;
+            height: 80vh;
+        }
+        #giveUpButton {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+        .left-column {
+            position: relative;
+            height: 80vh;
+        }
+
+        #enemyField,
+        #ownField {
+            position: absolute;
+            left: 0;
+            width: 100%;
+        }
+
+        #enemyField {
+            top: 0;
+            height: 30%;
+        }
+
+        #ownField {
+            bottom: 0%; /* Adjust the top position to create a 40% gap */
+            height: 30%;
+        }
+
+    </style>
+    <script src="schachRequests.js"></script>
+    <link rel="stylesheet" href="css/bulma.css">
+
 
 </head>
 
-<body onload="firstLoad();">
-    <div style="text-align: center; font: bold;">PMZ_Chess</div>
-    <div id="gameID"></div>
-
-    
-
-    
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <form action="" name="playingField" id="playingField"></form>
-    </div>
-
-    <div id="startGameButton">
-        <button onclick="startGame();" style="background-color: aqua; position: absolute; top: 35%; left: 50%;transform: translate(-50%, -50%); height: 10vh; width: 40vh; text-align: center;">start game</button>
-    </div>
-    <div id="joinGameButton">
-        <button onclick="joinGame();" style="background-color: aqua; position: absolute; top: 55%; left: 50%;transform: translate(-50%, -50%);  height: 10vh; width: 40vh; text-align: center;">join game</button>
-    </div>
-
-    
-    
-
-    <div id="popUp">
-          
+    <body onload="firstLoad();">
+    <div id="overlay">
+        <div id="popup">
+            <h2>Enter Your Name</h2>
+            <input type="text" id="name" placeholder="Your Name">
+            <button id="close-btn" onclick="nameInputed()">Enter</button>
+        </div>
     </div>
 
     <div id="hilfe">
 
     </div>
 
+    <header class="header">
+        <div>
+            <!-- Button on the left -->
+        </div>
+        <h1 class="title is-size-4" style="color: white">
+            PMZ_CHESS
+        </h1>
+        <div>
+            <!-- Button on the right -->
+        </div>
+    </header>
 
-      
+    <section class="section">
+        <div class="columns is-mobile">
+            <div class="column left-column">
+                <div id="enemyField">
+                    debug
+                </div>
+                <div id="ownField">
+                    debug
+                </div>
+            </div>
+            <div class="column is-three-fifths">
+                <div id="playingField">
+                    <form action="" name="playingField"></form>
+                </div>
+            </div>
+            <div class="column right-column">
+                <img src="pictores/PMZ-Schach-LOGO.png" alt="Responsive Image">
+                <div id="giveUpButton">
+                    debug
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <div id="gameID"></div>
+
+    
+
+    
+
+
+    <div id="startGameButton">
+        <button onclick="multiplayer();" style="position: absolute; top: 35%; left: 50%;transform: translate(-50%, -50%); height: 10vh; width: 40vh; text-align: center; color: #0a0a0a" class="button is-primary">gegen anderen Menschen</button>
+    </div>
+    <div id="joinGameButton">
+        <button onclick="<!--pietHein();-->" style="position: absolute; top: 55%; left: 50%;transform: translate(-50%, -50%); height: 10vh; width: 40vh; text-align: center; color: #0a0a0a" class="button is-primary">gegen Piet Hein</button>
+
+    </div>
 
 </body>
 </html>

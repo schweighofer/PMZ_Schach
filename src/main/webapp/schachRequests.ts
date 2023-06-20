@@ -1,51 +1,39 @@
-var NAME:string = "";
+var OWN_NAME:string = "";
 var GAMEID:number;
+var ENEMY_GAMEID:number;
+var MAX_TIME:number;
 
 
 const firstLoad = () => {
     // @ts-ignore
     loadField();
-    document.getElementById("popUp").innerHTML = "<div style=\"background-color: red; position: absolute;  top: 56%; left: 50%;transform: translate(-50%, -50%); height: 50vh; width: 50vh;\"><h1 style=\"text-align: center;\">ALERT!</h1><p style=\"text-align: center; font-size: larger;\">please input your name:</p><div style=\"display: flex; justify-content: center; align-items: center;\"><input type=\"text\" id=\"name\"/><button onclick=\"nameInputed();\">go!</button></div></div>"
-    document.getElementById("popUp").style.backgroundColor = "red";
+}
+const multiplayer = () => {
+    document.getElementById("startGameButton").style.display = "none";
+    document.getElementById("joinGameButton").style.display = "none";
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").innerHTML =
+        "            <button id=\"close-btn\" onclick=\"start();\">Spiel starten</button>" +
+        "            <button id=\"close-btn\" onclick=\"joinGame();\">Spiel beitreten</button>";
 }
 
 const nameInputed = (): void => {
-    NAME = (document.getElementById("name") as HTMLInputElement).value;
-    console.log("your name is: " + NAME);
+    OWN_NAME = (document.getElementById("name") as HTMLInputElement).value;
+    console.log("your name is: " + OWN_NAME);
 
-    document.getElementById("popUp").style.display = "none";
+    while(!(OWN_NAME.length > 0)){
+        document.getElementById("popup").innerHTML = "<h2>Enter Your Name(>0)</h2>\n" +
+            "        <input type=\"text\" id=\"name\" placeholder=\"Your Name\">\n" +
+            "        <button id=\"close-btn\" onclick=\"nameInputed();\">Enter</button>";
+        OWN_NAME = (document.getElementById("name") as HTMLInputElement).value;
+    }
+    document.getElementById("overlay").style.display = "none";
 }
 
 
-const startGame = () => {
-    document.getElementById("startGameButton").style.display = "none";
-    document.getElementById("joinGameButton").style.display = "none";
 
-    // @ts-ignore
-    var gameID:number;
-    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start?time=`+20;
-    fetch(url)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("GET REQUEST FAILED");
-            }
-            return res.json();
-        })
-        .then(gameIDJSON => {
-            gameID = parseInt(gameIDJSON);
-            document.getElementById("gameID").innerHTML = "<p>your gameID is: "+gameID+"</p><p>the gameID toshare is:"+(gameID+1)+"</p>";
-            // @ts-ignore
-            const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
-            GAMEID = gameID;
-            console.log("hallo1");
-            displayGameBoardRequest(url);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
-}
 const displayGameBoard = async (gameBoardJSON, moveAbles) => {
+
     var reihe: number = 1;
     var html: string = "";
 
@@ -75,23 +63,104 @@ const joinGame = () => {
     document.getElementById("startGameButton").style.display = "none";
     document.getElementById("joinGameButton").style.display = "none";
 
-    document.getElementById("popUp").style.display = "block";
-    document.getElementById("popUp").innerHTML = "<div style=\"background-color: aqua; position: absolute;  top: 56%; left: 50%;transform: translate(-50%, -50%); height: 50vh; width: 50vh;\"><p>Enter the your given hashcode: </p><input type=\"text\" id=\"hash\"/><button onclick=\"gameIDInputed();\">go!</button></div>"
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").innerHTML = "<a>Enter Game ID:</a>\n" +
+            "            <input type=\"text\" id=\"hash\" placeholder=\"_\">\n" +
+            "            <button id=\"close-btn\" onclick=\"gameIDInputed();\">Enter</button>";
+
+
 
 }
-const gameIDInputed = (): void => {
-    // @ts-ignore
-    var gameID:number = (document.getElementById("hash") as HTMLInputElement).value;
-    document.getElementById("popUp").style.display = "none";
+const start = async (): void => {
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").innerHTML = "<a>Enter Time:</a>\n" +
+        "            <input type=\"text\" id=\"time\">\n" + "</br>" +
+        "            <button id=\"startAsWhite\" onclick=\"startAsWhite();\">als Weiß starten</button>"+
+        "            <button id=\"startAsBlack\" onclick=\"startAsBlack();\">als Schwarz auf Weißen warten</button>";
+
+
+}
+const gameIDInputed = async (): void => {
+    var gameID : number = (document.getElementById("hash") as HTMLInputElement).value;
+    document.getElementById("overlay").style.display = "none";
     console.log("your hash is: " + gameID);
     GAMEID = gameID;
+    if(GAMEID % 2 == 0){
+        ENEMY_GAMEID = parseInt(GAMEID) + 1;
+    }
+    else {
+        ENEMY_GAMEID = parseInt(GAMEID) - 1;
+    }
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` +gameID;
+    await setOwnName();
     displayGameBoardRequest(url);
+
+}
+const startAsWhite = async () : void => {
+    const timeInput = (document.getElementById("time") as HTMLInputElement).value;
+    MAX_TIME = parseInt(timeInput);
+    console.log("1"+MAX_TIME);
+    console.log("2"+timeInput);
+    console.log("3"+document.getElementById("time"));
+    while(MAX_TIME < 60){
+        document.getElementById("popup").innerHTML = "<a>Enter Time(>=60):</a>\n" +
+            "            <input type=\"text\" id=\"time\">\n" + "</br>"
+        "            <button id=\"startAsWhite\" onclick=\"startAsWhite();\">als Weiß starten</button>"+
+        "            <button id=\"startAsBlack\" onclick=\"startAsBlack();\">als Schwarz auf Weißen warten</button>";
+        const timeInput = document.getElementById("time") as HTMLInputElement;
+        MAX_TIME = parseInt(timeInput.value);
+    }
+    // @ts-ignore
+    GAMEID = await startGame();
+    ENEMY_GAMEID = parseInt(GAMEID) + 1;
+    await setOwnName();
+    const url : string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` + GAMEID;
+    displayGameBoardRequest(url);
+    document.getElementById("overlay").style.display = "none";
+}
+const startAsBlack = async () : void => {
+    const timeInput = (document.getElementById("time") as HTMLInputElement).value;
+    MAX_TIME = parseInt(timeInput);
+    console.log("1"+MAX_TIME);
+    console.log("2"+timeInput);
+    console.log("3"+document.getElementById("time"));
+    while(MAX_TIME < 60){
+        document.getElementById("popup").innerHTML = "<a>Enter Time(>=60):</a>\n" +
+            "            <input type=\"text\" id=\"time\">\n" + "</br>"
+        "            <button id=\"startAsWhite\" onclick=\"startAsWhite();\">als Weiß starten</button>"+
+        "            <button id=\"startAsBlack\" onclick=\"startAsBlack();\">als Schwarz auf Weißen warten</button>";
+        const timeInput = document.getElementById("time") as HTMLInputElement;
+        MAX_TIME = parseInt(timeInput.value);
+    }
+    ENEMY_GAMEID = await startGame();
+    GAMEID = parseInt(ENEMY_GAMEID) + 1;
+    console.log("ugabugaranpararf::"+GAMEID);
+    await setOwnName();
+    const url : string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/board/` + GAMEID;
+    displayGameBoardRequest(url);
+    document.getElementById("overlay").style.display = "none";
+}
+const startGame = async (): number => {
+    // @ts-ignore
+    var gameID:number;
+    gameID = (await getGameID());
+    console.log("gameID::" + gameID.toString());
+
+
+    return gameID;
 }
 const displayGameBoardRequest = async (url): void => {
     var isBoardNotAktuell : boolean = true;
+    while (!(await hasEnemyJoined())){
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("popup").innerHTML = "<h1>GEGNER IST NOCH NICHT GEJOINED</h1><a>seine GameID wäre:" + ENEMY_GAMEID + "</a>";
+        console.log(await getEnemyName(GAMEID) + ":::" + await getEnemyName(ENEMY_GAMEID));
+        console.log(GAMEID + ":::" + ENEMY_GAMEID);
+    }
+    document.getElementById("overlay").style.display = "none";
     if(!(await hasEnded())) {
         do {
+            document.getElementById("ownField").innerHTML = OWN_NAME + " : " + (await getOwnTime());
             if (isBoardNotAktuell) {
                 fetch(url)
                     .then(res => {
@@ -108,6 +177,7 @@ const displayGameBoardRequest = async (url): void => {
 
             if (!(await isOnTurn()) && !(await hasEnded())) {
                 do {
+                    document.getElementById("enemyField").innerHTML = (await getEnemyName(GAMEID)) + " : " + (await getEnemyTime());
                 } while (!(await isOnTurn()) && !(await hasEnded()));
                 isBoardNotAktuell = true;
             }
@@ -131,13 +201,13 @@ const displayGameBoardRequest = async (url): void => {
         .then(gameBoardJSON => {
             displayGameBoard(gameBoardJSON, []);
         });
-    //if(isCheckmate)
+    //todo: getStats()
 
 }
 
 
 var POSITION;
-const planmoveOnline = async (position) => {
+const planmoveOnline = async (position): void => {
     if(!(await hasEnded())) {
         POSITION = position;
         console.log(POSITION);
@@ -208,6 +278,7 @@ const isOnTurn = async () => {
 const hasEnded = async () => {
     const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/ended/` + GAMEID;
     const response = await fetch(url);
+    console.log("203");
     return await response.json();
 }
 
@@ -217,8 +288,55 @@ const isCheck = async () => {
     return await response.json();
 }
 
-const isCheckmate = async () => {
-    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/isCheckmate/` + GAMEID;
+const setOwnName = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/setName/` + GAMEID + '?name=' + OWN_NAME;
+    console.log("215::::"+OWN_NAME);
+    console.log(`http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/setName/` + GAMEID + '?name=' + OWN_NAME);
+    const response = await fetch(url);
+    return response.json();
+}
+const getEnemyName = async (gameID : number) => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getEnemyName/` + gameID ;
+    console.log("220");
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch enemy name');
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data as string;
+        });
+}
+const getOwnTime = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getOwnTime/` + GAMEID ;
+    const response = await fetch(url);
+    console.log("227");
+    return await response.json();
+}
+const getEnemyTime = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getEnemyTime/` + GAMEID ;
+    const response = await fetch(url);
+    console.log("233");
+    return await response.json();
+}
+const getStats = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/getStats/` + GAMEID ;
+    const response = await fetch(url);
+
+    return await response.json();
+}
+const getGameID = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/start?time=`+MAX_TIME+"";
+    const response = await fetch(url);
+    console.log("245");
+    return await response.json();
+}
+const hasEnemyJoined = async () => {
+    const url: string = `http://localhost:8080/pmz-1.0-SNAPSHOT/api/chess/hasEnemyJoined/` + GAMEID;
     const response = await fetch(url);
     return await response.json();
 }
+
+

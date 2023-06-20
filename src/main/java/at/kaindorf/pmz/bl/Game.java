@@ -52,8 +52,6 @@ public class Game {
         this.board = new ArrayList<>();
         setupBoard();
 
-        // white counter instantly begins
-        startingTimes[0] = LocalDateTime.now();
     }
 
     private synchronized void setupBoard() {
@@ -382,6 +380,9 @@ public class Game {
         if (globalMoveCount == 1) {
             startingTimes[1] = LocalDateTime.now();
         }
+        if(globalMoveCount == 2) {
+            startingTimes[0] = LocalDateTime.now();
+        }
 
         // update the wait
         waitFrom = LocalDateTime.now();
@@ -389,11 +390,11 @@ public class Game {
         return true;
     }
 
-    public String getPlayerName(int index) {
+    public synchronized String getPlayerName(int index) {
         return playerNames[index];
     }
 
-    public void setPlayerName(String playerName, int index) {
+    public synchronized void setPlayerName(String playerName, int index) {
         this.playerNames[index] = playerName;
     }
 
@@ -422,6 +423,9 @@ public class Game {
     }
 
     public int getTime(int id) {
+        if(startingTimes[id] == null){
+            return maxTime;
+        }
         if (stopTime != null) {
             return maxTime - (int)(Duration.between(startingTimes[id], stopTime).toSeconds() - secondsOfWait[id]);
         }
@@ -435,7 +439,7 @@ public class Game {
     public synchronized boolean isHasWhiteTurn() {
         // logic for if time runs out
         int id = (hasWhiteTurn ? 1 : 0);
-        if (Duration.between(startingTimes[id], LocalDateTime.now()).toSeconds() - secondsOfWait[id] >= maxTime) {
+        if (getTime(id) <= 0) {
             // TODO spiel beenden
             hasTimeEnded[id] = true;
         }

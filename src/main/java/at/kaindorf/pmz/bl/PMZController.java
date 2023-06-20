@@ -91,15 +91,15 @@ public class PMZController {
     }
 
     public String getName(Integer id) {
-        return games.get(id).getPlayerName(id % 2);
+        return games.get(id / 2 * 2).getPlayerName(id % 2);
     }
 
     public void setName(Integer id, String name) {
-        games.get(id).setPlayerName(name, id % 2);
+        games.get(id / 2 * 2).setPlayerName(name, id % 2);
     }
 
     public int getTime(Integer id) {
-        return games.get(id).getTime(id % 2);
+        return games.get(id / 2 * 2).getTime(id % 2);
     }
 
     public String getStats(Integer id) {

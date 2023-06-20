@@ -84,35 +84,38 @@ public class ChessResource {
     }
 
     @GET
-    @Path("/getName/{id}")
+    @Path("/getEnemyName/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getName(@PathParam("id") Integer id) {
-        return Response.ok(List.of(
-                PMZController.getInstance().getName(id),
-                PMZController.getInstance().getName((id % 2 == 0 ? id + 1 : id - 1))
-        )).build();
+    public Response getEnemyName(@PathParam("id") Integer id) {
+        return Response.ok("\"" +PMZController.getInstance().getName((id % 2 == 0 ? id + 1 : id - 1))+"\"", MediaType.APPLICATION_JSON).build();
     }
 
-    @POST
+
+    @GET
     @Path("/setName/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response setName(@PathParam("id") Integer id, @QueryParam("name") String name) {
         PMZController.getInstance().setName(id, name);
-        return Response.ok().build();
+        return Response.ok("\""+ name+"\"", MediaType.APPLICATION_JSON).build();
     }
 
     @GET
-    @Path("/getTime/{id}")
+    @Path("/getOwnTime/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTime(@PathParam("id") Integer id) {
-        return Response.ok(List.of(
-                PMZController.getInstance().getTime(id),
-                PMZController.getInstance().getTime((id % 2 == 0 ? id + 1 : id - 1))
-        )).build();
+    public Response getOwnTime(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().getTime(id)).build();
     }
+    @GET
+    @Path("/getEnemyTime/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEnemyTime(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().getTime((id % 2 == 0 ? id + 1 : id - 1))).build();
+    }
+
 
     @GET
     @Path("/getStats/{id}")
@@ -120,5 +123,13 @@ public class ChessResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStats(@PathParam("id") Integer id) {
         return Response.ok(PMZController.getInstance().getStats(id)).build();
+    }
+
+    @GET
+    @Path("/hasEnemyJoined/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hasEnemyJoined(@PathParam("id") Integer id) {
+        return Response.ok(PMZController.getInstance().getName((id % 2 == 0 ? id + 1 : id - 1)) != null).build();
     }
 }
