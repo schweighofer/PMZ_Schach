@@ -550,10 +550,48 @@ public class Game {
     }
    //todo: time
     /*
-                request for set max time
-                start blackTimer for white when black made their first move
-                start whiteTimer for black when white made their second move
-                when one time > max time that side has lost
+                time in seconds as queryparam on startGame request
+                start whiteCountdownThread for white when black made their first move
+                    black first move -> globalMoveCount = 1
+                start blackCountdownThread for black when white made their second move
+                    white second move -> globalMoveCount = 2
+                add time in hasEnded
+                    return </--/> || hasTimeEnded(isWhite) || hasTimeEnded(!isWhite)
+                add getTime Request
+                    for black and white
+                        when black makes request
+                            black time first then white
+                        when white makes request
+                            white time first then black
+     */
+    //todo: name
+    /*
+               setName request
+                    PathParam {id}
+                    QueryParam name
+                    set black or white name (you know which because of id)
+               getName request
+                    PathParam {id}
+                    when black makes request
+                            black time first then white
+                    when white makes request
+                            white time first then black
+               Game
+                    whiteName = ""
+                    blackName = ""
+                    getter und setter
+     */
+    //todo: stats
+    /*
+            //we use no isCheckmate request. we only do hasEnded request and when that is the case we do getStats request
+            getStats request
+                PathParam {id}
+                switch
+                    Patt() -> unentschieden wegen Patt
+                    checkmate(isWhite) -> wei0 hat gewonnen durch schachmatt
+                    checkmate(!isWhite) -> schwarz hat gewonnen durch schachmatt
+                    hasTimeEnded(isWhite) -> schwarz hat gewonnen durch Zeit
+                    hasTimeEnded(!isWhite) -> weiß hat gewonnen durch Zeit
      */
 
     //todo: implement stockfish (Piet Hein)
