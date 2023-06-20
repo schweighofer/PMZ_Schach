@@ -44,28 +44,28 @@ public class Knight extends Piece {
         // right up
         for (int i = 0; i < 2; i++) {
             MutableInteger possibleMove = new MutableInteger(position + options[i]);
-            if ((possibleMove.v() >= 0) && (possibleMove.v() % LINE_SIZE != 0)) {
+            if ((possibleMove.v() >= 0) && (possibleMove.v() % LINE_SIZE != 0) && (position % LINE_SIZE != LINE_SIZE - 1)) {
                 handleMove(possibleMove, 0, possibleMoves);
             }
         }
         // right down
         for (int i = 2; i < 4; i++) {
-            MutableInteger possibleMove = new MutableInteger(position + options[i]);
-            if ((possibleMove.v() < FIELD_SIZE) && (possibleMove.v() % LINE_SIZE != 0)) {
+            MutableInteger possibleMove = new MutableInteger(position + options[i] );
+            if ((possibleMove.v() < FIELD_SIZE) && (possibleMove.v() % LINE_SIZE != 0) && (position % LINE_SIZE != LINE_SIZE - 1)) {
                 handleMove(possibleMove, 0, possibleMoves);
             }
         }
         // left down
         for (int i = 4; i < 6; i++) {
             MutableInteger possibleMove = new MutableInteger(position + options[i]);
-            if ((possibleMove.v() < FIELD_SIZE) && (possibleMove.v() % LINE_SIZE != 7)) {
+            if ((possibleMove.v() < FIELD_SIZE) && (possibleMove.v() % LINE_SIZE != 7) && (position % LINE_SIZE != 0)) {
                 handleMove(possibleMove, 0, possibleMoves);
             }
         }
         // right up
         for (int i = 6; i < 8; i++) {
             MutableInteger possibleMove = new MutableInteger(position + options[i]);
-            if ((possibleMove.v() >= 0) && (possibleMove.v() % LINE_SIZE != 7)) {
+            if ((possibleMove.v() >= 0) && (possibleMove.v() % LINE_SIZE != 7)  && (position % LINE_SIZE != 0)) {
                 handleMove(possibleMove, 0, possibleMoves);
             }
         }
